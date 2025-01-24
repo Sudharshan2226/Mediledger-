@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Supplier Dashboard</title>
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .product-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .product-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            width: 250px;
+            text-align: center;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        .status-awaiting {
+            background-color: #f0ad4e;
+            color: white;
+        }
+        .status-available {
+            background-color: #5cb85c;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Supplier Dashboard</h1>
+        
+        <form method="POST" action="{{ url_for('supplier') }}">
+            <h2>Add Materials for Manufacturers</h2>
+            <div>
+                <label>Material Name:</label>
+                <input type="text" name="material_name" required>
+            </div>
+            <div>
+                <label>Quantity:</label>
+                <input type="number" name="quantity" required>
+            </div>
+            <div>
+                <label>Description:</label>
+                <textarea name="description" rows="4"></textarea>
+            </div>
+            <button type="submit">Add Materials</button>
+        </form>
+
+        <h2>Available Products Needing Materials</h2>
+        <div class="product-list">
+            {% for product in products %}
+            <div class="product-card">
+                <strong>{{ product.name }} (Batch ID: {{ product.batch_id }})</strong>
+                <br>
+                <img src="{{ url_for('static', filename='qr_codes/' ~ product.batch_id ~ '.png') }}" alt="QR Code" style="max-width: 200px;">
+                
+                <div class="status {{ 'status-awaiting' if product.supplier_id is none else 'status-available' }}">
+                    {{ product.status or 'Awaiting Materials' }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</body>
+</html>

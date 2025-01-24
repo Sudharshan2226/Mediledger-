@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediLedger - Manufacturer Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <header class="bg-blue-600 text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <img src="/static/logo.png" alt="MediLedger Logo" class="h-10 w-10">
+                <h1 class="text-2xl font-bold">MediLedger</h1>
+            </div>
+            <nav class="space-x-4">
+                <a href="#home" class="hover:text-blue-200">Home</a>
+                <a href="#about" class="hover:text-blue-200">About</a>
+                <a href="{{ url_for('logout') }}" class="bg-red-500 hover:bg-red-600 px-3 py-2 rounded">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container mx-auto mt-8 px-4">
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Add New Product</h2>
+            <form method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-gray-700 font-bold mb-2" for="name">Product Name</label>
+                        <input type="text" name="name" required 
+                            class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                            placeholder="Enter product name...">
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-bold mb-2" for="product_id">Product ID</label>
+                        <input type="text" name="product_id" required 
+                            class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                            placeholder="Enter unique product ID">
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-bold mb-2" for="medicine_type">Medicine Type</label>
+                        <select name="medicine_type" required 
+                            class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Select Medicine Type</option>
+                            {% for type in medicine_types %}
+                                <option value="{{ type }}">{{ type }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-bold mb-2" for="medicine_form">Medicine Form</label>
+                        <select name="medicine_form" required 
+                            class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Select Medicine Form</option>
+                            {% for form in medicine_forms %}
+                                <option value="{{ form }}">{{ form }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-gray-700 font-bold mb-2" for="description">Product Description</label>
+                        <textarea name="description" 
+                            class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                            placeholder="Provide product details" rows="3"></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-gray-700 font-bold mb-2" for="manufacturing_date">Manufacturing Date</label>
+                            <input type="date" name="manufacturing_date" required 
+                                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-bold mb-2" for="expiration_date">Expiration Date</label>
+                            <input type="date" name="expiration_date" required 
+                                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-bold mb-2" for="dosage">Dosage</label>
+                        <input type="text" name="dosage" 
+                            class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                            placeholder="e.g., 500mg, 2 tablets daily">
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-bold mb-2" for="side_effects">Potential Side Effects</label>
+                        <textarea name="side_effects" 
+                            class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                            placeholder="List known side effects" rows="3"></textarea>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" 
+                            class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-300">
+                            <i class="fas fa-plus-circle mr-2"></i>Add Product
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="mt-8 bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Your Products</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for product in products %}
+                <div class="border rounded-lg p-4 hover:shadow-lg transition duration-300">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-semibold">{{ product.name }}</h3>
+                        <span class="text-sm text-gray-500">Batch: {{ product.batch_id }}</span>
+                    </div>
+                    <img src="{{ url_for('static', filename='qr_codes/' ~ product.batch_id ~ '.png') }}" 
+                         alt="QR Code" class="w-32 h-32 mx-auto mb-4">
+                    <div class="space-y-2 text-sm">
+                        <p><strong>Product ID:</strong> {{ product.product_id }}</p>
+                        <p><strong>Type:</strong> {{ product.medicine_type }}</p>
+                        <p><strong>Form:</strong> {{ product.medicine_form }}</p>
+                        <p><strong>Manufactured:</strong> {{ product.manufacturing_date }}</p>
+                        <p><strong>Expires:</strong> {{ product.expiration_date }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-blue-600 text-white py-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2024 MediLedger. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

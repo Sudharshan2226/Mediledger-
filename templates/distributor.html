@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distributor Tracking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6">Medicine Transport Tracking</h1>
+        
+        <form id="trackingForm" method="POST" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Select Product</label>
+                <select name="product_id" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
+                    {% for product in products %}
+                    <option value="{{ product.id }}">
+                        {{ product.name }} (Batch: {{ product.batch_id }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Tracking Status</label>
+                <select name="tracking_status" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
+                    <option value="In Transit">In Transit</option>
+                    <option value="Warehouse">In Warehouse</option>
+                    <option value="Dispatched">Dispatched</option>
+                    <option value="Delivered">Delivered</option>
+                </select>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Current Location</label>
+                <div class="flex items-center">
+                    <input type="text" id="currentLocation" name="current_location" 
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mr-2"
+                        placeholder="Enter or auto-detect location">
+                    <button type="button" id="geolocateBtn" 
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        🌍 Detect Location
+                    </button>
+                </div>
+                <p id="locationError" class="text-red-500 text-sm mt-2 hidden">Location access denied or unavailable</p>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Temperature (°C)</label>
+                    <input type="number" step="0.1" name="temperature" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Humidity (%)</label>
+                    <input type="number" step="0.1" name="humidity" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
+                </div>
+            </div>
+            
+            <div class="mb-4 mt-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Transport Conditions</label>
+                <textarea name="transport_conditions" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" rows="3"></textarea>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Expected Delivery Date</label>
+                <input type="date" name="expected_delivery_date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
+            </div>
+            
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Update Tracking
+            </button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('geolocateBtn').addEventListener('click', function() {
+            const locationInput = document.getElementById('currentLocation');
+            const locationError = document.getElementById('locationError');
+
+            // Check if geolocation is supported
+            if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    // Use Reverse Geocoding API to get readable location
+                    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.display_name) {
+                                locationInput.value = data.display_name;
+                            } else {
+                                locationInput.value = `${position.coords.latitude}, ${position.coords.longitude}`;
+                            }
+                            locationError.classList.add('hidden');
+                        })
+                        .catch(error => {
+                            // Fallback to coordinates if reverse geocoding fails
+                            locationInput.value = `${position.coords.latitude}, ${position.coords.longitude}`;
+                            locationError.classList.add('hidden');
+                        });
+                }, function(error) {
+                    // Handle location access errors
+                    locationError.textContent = 'Location access denied or unavailable';
+                    locationError.classList.remove('hidden');
+                });
+            } else {
+                // Geolocation not supported
+                locationError.textContent = 'Geolocation is not supported by your browser';
+                locationError.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
+

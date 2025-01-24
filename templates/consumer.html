@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediLedger - Product Tracking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+            <div class="bg-blue-600 text-white p-6">
+                <h1 class="text-3xl font-bold">Product Tracking Details</h1>
+                <p class="text-blue-200">Batch ID: {{ product.batch_id }}</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 p-6">
+                <div>
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-800">Product Information</h2>
+                    <div class="space-y-3 bg-gray-50 p-4 rounded-lg">
+                        <div class="flex justify-between border-b pb-2">
+                            <span class="font-medium">Product Name:</span>
+                            <span>{{ product.name }}</span>
+                        </div>
+                        <div class="flex justify-between border-b pb-2">
+                            <span class="font-medium">Product ID:</span>
+                            <span>{{ product.product_id }}</span>
+                        </div>
+                        <div class="flex justify-between border-b pb-2">
+                            <span class="font-medium">Medicine Type:</span>
+                            <span>{{ product.medicine_type }}</span>
+                        </div>
+                        <div class="flex justify-between border-b pb-2">
+                            <span class="font-medium">Medicine Form:</span>
+                            <span>{{ product.medicine_form }}</span>
+                        </div>
+                        <div class="flex justify-between border-b pb-2">
+                            <span class="font-medium">Manufacturing Date:</span>
+                            <span>{{ product.manufacturing_date }}</span>
+                        </div>
+                        <div class="flex justify-between border-b pb-2">
+                            <span class="font-medium">Expiration Date:</span>
+                            <span>{{ product.expiration_date }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-800">Additional Details</h2>
+                    <div class="space-y-3 bg-gray-50 p-4 rounded-lg">
+                        <div>
+                            <h3 class="font-medium text-lg mb-2">Description</h3>
+                            <p class="text-gray-700">{{ product.description or 'No description available' }}</p>
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-lg mb-2">Dosage</h3>
+                            <p class="text-gray-700">{{ product.dosage or 'Not specified' }}</p>
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-lg mb-2">Potential Side Effects</h3>
+                            <p class="text-gray-700">{{ product.side_effects or 'No known side effects' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 bg-gray-100">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-800">Tracking History</h2>
+                <div class="space-y-4">
+                    {% if history %}
+                        {% for entry in history %}
+                        <div class="bg-white p-4 rounded-lg shadow-md">
+                            <div class="flex justify-between items-center">
+                                <span class="font-medium text-blue-600">{{ entry.status }}</span>
+                                <span class="text-sm text-gray-500">
+                                    <i class="far fa-clock mr-2"></i>
+                                    {{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
+                                </span>
+                            </div>
+                            <div class="mt-2 text-sm text-gray-600">
+                                Updated by: {{ entry.updated_by }}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="bg-white p-4 rounded-lg shadow-md text-center text-gray-500">
+                            No tracking history available
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="p-6 bg-white border-t">
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <h3 class="font-semibold mb-2">Manufacturer Details</h3>
+                        <p>Name: {{ manufacturer.username }}</p>
+                        <p>Email: {{ manufacturer.email }}</p>
+                    </div>
+                    {% if distributor %}
+                    <div>
+                        <h3 class="font-semibold mb-2">Distributor Details</h3>
+                        <p>Name: {{ distributor.username }}</p>
+                        <p>Email: {{ distributor.email }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="p-6 bg-gray-50 text-center">
+                <img src="{{ url_for('static', filename='qr_codes/' ~ product.batch_id ~ '.png') }}" 
+                     alt="Product QR Code" class="mx-auto w-48 h-48 mb-4">
+                <p class="text-gray-600">Scan this QR code to verify product authenticity</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
