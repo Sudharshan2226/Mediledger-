@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediLedger - Pharmacy Dashboard Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="flex items-center">
+                        <div class="gradient-bg p-2 rounded-lg">
+                            <i class="fas fa-pills text-white text-xl"></i>
+                        </div>
+                        <span class="ml-3 text-2xl font-bold bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent">
+                            MediLedger
+                        </span>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-gray-600">Demo: Pharmacy Dashboard</span>
+                    <a href="index.html" class="text-blue-600 hover:text-blue-800">← Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Pharmacy Dashboard</h1>
+            <p class="text-gray-500">Welcome back, HealthPlus Pharmacy</p>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-sm p-6 card-hover">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                        <i class="fas fa-boxes text-2xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-gray-500">Inventory Items</p>
+                        <h3 class="text-2xl font-bold">89</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-6 card-hover">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                        <i class="fas fa-exclamation-triangle text-2xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-gray-500">Low Stock Alerts</p>
+                        <h3 class="text-2xl font-bold">7</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-6 card-hover">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-green-100 text-green-600">
+                        <i class="fas fa-dollar-sign text-2xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-gray-500">Total Value</p>
+                        <h3 class="text-2xl font-bold">$45,230</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-6 card-hover">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-red-100 text-red-600">
+                        <i class="fas fa-clock text-2xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-gray-500">Expiring Soon</p>
+                        <h3 class="text-2xl font-bold">12</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inventory Management -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+            <h2 class="text-2xl font-bold mb-6">Update Inventory</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Select Product</label>
+                        <select class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <option>Paracetamol 500mg (Batch: PCM-500-001)</option>
+                            <option>Amoxicillin 250mg (Batch: AMX-250-002)</option>
+                            <option>Vitamin D3 1000IU (Batch: VTD-1000-003)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Status</label>
+                        <select class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <option>Received</option>
+                            <option>Quality Verified</option>
+                            <option>Available for Sale</option>
+                            <option>Sold</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Quantity</label>
+                            <input type="number" value="50" 
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Unit Price ($)</label>
+                            <input type="number" value="2.50" step="0.01" 
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Storage Location</label>
+                        <select class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <option>Refrigerated Section A</option>
+                            <option>General Storage B</option>
+                            <option>Temperature Controlled C</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-span-2">
+                    <button onclick="updateInventory()" 
+                            class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-sync-alt mr-2"></i>Update Inventory
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Inventory -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+            <h2 class="text-2xl font-bold mb-6">Current Inventory</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Batch ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Unit Price</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expiry Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">Paracetamol 500mg</div>
+                                <div class="text-sm text-gray-500">Analgesics</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">PCM-500-001</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">50</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$2.50</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2027-09-01</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Available</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <a href="consumer-demo.html?batch=PCM-500-001" class="text-indigo-600 hover:text-indigo-900">Verify</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">Amoxicillin 250mg</div>
+                                <div class="text-sm text-gray-500">Antibiotics</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">AMX-250-002</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">30</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$5.75</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-12-15</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Available</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <a href="consumer-demo.html?batch=AMX-250-002" class="text-indigo-600 hover:text-indigo-900">Verify</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">Vitamin D3 1000IU</div>
+                                <div class="text-sm text-gray-500">Vitamins</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">VTD-1000-003</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">8</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$12.99</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2027-03-20</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Low Stock</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <a href="consumer-demo.html?batch=VTD-1000-003" class="text-indigo-600 hover:text-indigo-900">Verify</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Alerts and Notifications -->
+        <div class="bg-white rounded-xl shadow-sm p-6">
+            <h2 class="text-2xl font-bold mb-6">Alerts & Notifications</h2>
+            <div class="space-y-4">
+                <div class="border-l-4 border-yellow-400 bg-yellow-50 p-4 rounded-r-lg">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-yellow-700">
+                                <strong>Low Stock Alert:</strong> Vitamin D3 1000IU (Batch: VTD-1000-003) - Only 8 units remaining
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="border-l-4 border-red-400 bg-red-50 p-4 rounded-r-lg">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-clock text-red-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-red-700">
+                                <strong>Expiry Alert:</strong> Ibuprofen 400mg (Batch: IBU-400-005) expires in 15 days
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="border-l-4 border-green-400 bg-green-50 p-4 rounded-r-lg">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-check-circle text-green-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-green-700">
+                                <strong>Quality Verified:</strong> New shipment of Paracetamol 500mg successfully verified and added to inventory
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- QR Code Scanner Simulation -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mt-8">
+            <h2 class="text-2xl font-bold mb-6">QR Code Scanner</h2>
+            <div class="bg-gray-50 p-8 rounded-lg text-center">
+                <div class="mb-4">
+                    <i class="fas fa-qrcode text-gray-400 text-6xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Scan Product QR Code</h3>
+                <p class="text-gray-600 mb-4">Verify product authenticity and add to inventory</p>
+                <button onclick="simulateScan()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    <i class="fas fa-camera mr-2"></i>Simulate Scan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateInventory() {
+            alert('Inventory updated successfully! Blockchain record created and stock levels updated.');
+        }
+
+        function simulateScan() {
+            alert('QR Code Scanned!\n\nProduct: Paracetamol 500mg\nBatch: PCM-500-001\nStatus: ✓ Authentic\nManufacturer: PharmaCorp Ltd\nTransport Conditions: ✓ Maintained\n\nProduct verified and ready for sale.');
+        }
+    </script>
+</body>
+</html>

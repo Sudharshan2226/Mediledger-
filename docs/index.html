@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediLedger - Medicine Quality Assurance Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .hero-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%233b82f6' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="gradient-bg p-2 rounded-lg">
+                        <i class="fas fa-pills text-white text-xl"></i>
+                    </div>
+                    <span class="ml-3 text-2xl font-bold bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent">
+                        MediLedger
+                    </span>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <a href="#features" class="text-gray-600 hover:text-blue-600 transition-colors">Features</a>
+                    <a href="#demo" class="text-gray-600 hover:text-blue-600 transition-colors">Demo</a>
+                    <a href="#about" class="text-gray-600 hover:text-blue-600 transition-colors">About</a>
+                    <a href="https://github.com/Sudharshan2226/Mediledger-" target="_blank" 
+                       class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fab fa-github mr-2"></i>View Code
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-pattern py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h1 class="text-5xl font-bold text-gray-900 mb-6">
+                    Blockchain-Powered 
+                    <span class="bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+                        Medicine Quality Assurance
+                    </span>
+                </h1>
+                <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+                    Ensuring medicine safety through end-to-end tracking, AI-powered quality monitoring, 
+                    and immutable blockchain records. From manufacturing to consumer verification.
+                </p>
+                <div class="flex justify-center space-x-4">
+                    <button onclick="scrollToDemo()" 
+                            class="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-play mr-2"></i>View Live Demo
+                    </button>
+                    <a href="https://github.com/Sudharshan2226/Mediledger-" target="_blank"
+                       class="border border-blue-600 text-blue-600 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-50 transition-colors">
+                        <i class="fab fa-github mr-2"></i>Source Code
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Statement -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">The Problem We Solve</h2>
+                <p class="text-lg text-gray-600">Healthcare Industry Challenges</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center p-6 bg-red-50 rounded-xl">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Counterfeit Medicines</h3>
+                    <p class="text-gray-600">10-15% of global medicine supply contains counterfeit drugs</p>
+                </div>
+                <div class="text-center p-6 bg-yellow-50 rounded-xl">
+                    <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-clock text-yellow-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Expired Products</h3>
+                    <p class="text-gray-600">Lack of real-time monitoring leads to expired medicines reaching patients</p>
+                </div>
+                <div class="text-center p-6 bg-blue-50 rounded-xl">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-eye-slash text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">No Transparency</h3>
+                    <p class="text-gray-600">Consumers cannot verify medicine authenticity and quality</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Our Solution Features</h2>
+                <p class="text-lg text-gray-600">Comprehensive medicine quality assurance system</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm card-hover">
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-link text-blue-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Blockchain Security</h3>
+                    <p class="text-gray-600">Immutable records ensure data integrity and prevent tampering</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm card-hover">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-qrcode text-green-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">QR Code Tracking</h3>
+                    <p class="text-gray-600">Every medicine has a unique QR code for instant verification</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm card-hover">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-robot text-purple-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">AI Monitoring</h3>
+                    <p class="text-gray-600">Smart alerts for quality issues and predictive analysis</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm card-hover">
+                    <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-users text-orange-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Multi-Stakeholder</h3>
+                    <p class="text-gray-600">Connects manufacturers, distributors, pharmacies, and consumers</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demo" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Live Demo</h2>
+                <p class="text-lg text-gray-600">Explore different user roles and functionalities</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Manufacturer Dashboard -->
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-industry text-white text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-900">Manufacturer</h3>
+                            <p class="text-gray-600">Create & track products</p>
+                        </div>
+                    </div>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex justify-between text-sm">
+                            <span>Total Products</span>
+                            <span class="font-semibold">247</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>Active Batches</span>
+                            <span class="font-semibold">189</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>QR Codes Generated</span>
+                            <span class="font-semibold">247</span>
+                        </div>
+                    </div>
+                    <a href="manufacturer-demo.html" 
+                       class="block w-full bg-blue-600 text-white text-center py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        View Dashboard
+                    </a>
+                </div>
+
+                <!-- Distributor Dashboard -->
+                <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-truck text-white text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-900">Distributor</h3>
+                            <p class="text-gray-600">Track shipments</p>
+                        </div>
+                    </div>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex justify-between text-sm">
+                            <span>Total Shipments</span>
+                            <span class="font-semibold">156</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>In Transit</span>
+                            <span class="font-semibold">42</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>Delivered</span>
+                            <span class="font-semibold">114</span>
+                        </div>
+                    </div>
+                    <a href="distributor-demo.html" 
+                       class="block w-full bg-green-600 text-white text-center py-2 rounded-lg hover:bg-green-700 transition-colors">
+                        View Dashboard
+                    </a>
+                </div>
+
+                <!-- Pharmacy Dashboard -->
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-pills text-white text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-900">Pharmacy</h3>
+                            <p class="text-gray-600">Manage inventory</p>
+                        </div>
+                    </div>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex justify-between text-sm">
+                            <span>Inventory Items</span>
+                            <span class="font-semibold">89</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>Low Stock Alerts</span>
+                            <span class="font-semibold">7</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>Total Value</span>
+                            <span class="font-semibold">$45,230</span>
+                        </div>
+                    </div>
+                    <a href="pharmacy-demo.html" 
+                       class="block w-full bg-purple-600 text-white text-center py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                        View Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <!-- Consumer Verification Demo -->
+            <div class="mt-12 bg-gradient-to-r from-blue-600 to-purple-600 p-8 rounded-xl text-white text-center">
+                <h3 class="text-2xl font-bold mb-4">Consumer Verification Demo</h3>
+                <p class="text-lg mb-6">Try scanning a sample QR code to see how consumers can verify medicine authenticity</p>
+                <div class="bg-white p-4 rounded-lg inline-block">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sudharshan2226.github.io/Mediledger-/consumer-demo.html" 
+                         alt="Sample QR Code" class="w-32 h-32">
+                </div>
+                <p class="text-sm mt-4 opacity-80">Scan with your phone camera or click below</p>
+                <a href="consumer-demo.html" 
+                   class="inline-block mt-4 bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                    View Consumer Portal
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Stack -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Technology Stack</h2>
+                <p class="text-lg text-gray-600">Built with modern, scalable technologies</p>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-yellow-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                        <i class="fab fa-python text-yellow-600 text-2xl"></i>
+                    </div>
+                    <p class="text-sm font-semibold">Python Flask</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-link text-blue-600 text-2xl"></i>
+                    </div>
+                    <p class="text-sm font-semibold">Blockchain</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-database text-green-600 text-2xl"></i>
+                    </div>
+                    <p class="text-sm font-semibold">SQLite</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                        <i class="fab fa-js-square text-purple-600 text-2xl"></i>
+                    </div>
+                    <p class="text-sm font-semibold">JavaScript</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-red-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                        <i class="fab fa-html5 text-red-600 text-2xl"></i>
+                    </div>
+                    <p class="text-sm font-semibold">HTML5</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-indigo-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                        <i class="fab fa-css3-alt text-indigo-600 text-2xl"></i>
+                    </div>
+                    <p class="text-sm font-semibold">TailwindCSS</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">About This Project</h2>
+                <p class="text-lg text-gray-600">HACK-AI-THON 2.0 Submission</p>
+            </div>
+            <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-8 rounded-xl">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Project Details</h3>
+                        <ul class="space-y-2 text-gray-600">
+                            <li><strong>Problem Statement:</strong> Online Testing and Monitoring of Medicine Quality</li>
+                            <li><strong>Domain:</strong> Healthcare Technology</li>
+                            <li><strong>College:</strong> St. Joseph's College of Engineering</li>
+                            <li><strong>Event:</strong> HACK-AI-THON 2.0</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Key Features</h3>
+                        <ul class="space-y-2 text-gray-600">
+                            <li>✅ Blockchain-based immutable records</li>
+                            <li>✅ QR code authentication system</li>
+                            <li>✅ AI-powered quality monitoring</li>
+                            <li>✅ Multi-stakeholder ecosystem</li>
+                            <li>✅ Real-time tracking and alerts</li>
+                            <li>✅ Consumer verification portal</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <div class="gradient-bg p-2 rounded-lg">
+                            <i class="fas fa-pills text-white text-xl"></i>
+                        </div>
+                        <span class="ml-3 text-xl font-bold">MediLedger</span>
+                    </div>
+                    <p class="text-gray-400">
+                        Blockchain-powered medicine quality assurance system ensuring patient safety through transparency and innovation.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#features" class="hover:text-white transition-colors">Features</a></li>
+                        <li><a href="#demo" class="hover:text-white transition-colors">Demo</a></li>
+                        <li><a href="#about" class="hover:text-white transition-colors">About</a></li>
+                        <li><a href="https://github.com/Sudharshan2226/Mediledger-" target="_blank" class="hover:text-white transition-colors">Source Code</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Contact</h3>
+                    <div class="space-y-2 text-gray-400">
+                        <p><i class="fas fa-envelope mr-2"></i>sec23ad073@sairamtap.edu.in</p>
+                        <p><i class="fab fa-github mr-2"></i>Sudharshan2226</p>
+                        <p><i class="fas fa-university mr-2"></i>St. Joseph's College of Engineering</p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 MediLedger. Built for HACK-AI-THON 2.0. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function scrollToDemo() {
+            document.getElementById('demo').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Add smooth scrolling for all anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add animation on scroll
+        window.addEventListener('scroll', function() {
+            const cards = document.querySelectorAll('.card-hover');
+            cards.forEach(card => {
+                const cardTop = card.getBoundingClientRect().top;
+                const cardVisible = 150;
+                
+                if (cardTop < window.innerHeight - cardVisible) {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediLedger - Consumer Verification Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); }
+        .timeline-item { position: relative; padding-left: 2rem; }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0.5rem;
+            top: 0.5rem;
+            width: 0.75rem;
+            height: 0.75rem;
+            background: #3b82f6;
+            border-radius: 50%;
+        }
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 0.75rem;
+            top: 1.25rem;
+            width: 2px;
+            height: calc(100% + 1rem);
+            background: #e5e7eb;
+        }
+        .qr-scanner {
+            width: 300px;
+            height: 300px;
+            border: 2px dashed #3b82f6;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="flex items-center">
+                        <div class="gradient-bg p-2 rounded-lg">
+                            <i class="fas fa-pills text-white text-xl"></i>
+                        </div>
+                        <span class="ml-3 text-2xl font-bold bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent">
+                            MediLedger
+                        </span>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-gray-600">Demo: Consumer Verification</span>
+                    <a href="index.html" class="text-blue-600 hover:text-blue-800">← Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Verify Your Medicine</h1>
+            <p class="text-gray-500 mt-2">Scan the QR code on your medicine package to verify authenticity and view complete supply chain history</p>
+        </div>
+
+        <!-- QR Code Scanner Section -->
+        <div class="bg-white rounded-xl shadow-sm p-8 mb-8">
+            <h2 class="text-2xl font-bold text-center mb-6">Scan QR Code</h2>
+            <div class="qr-scanner">
+                <div class="text-center">
+                    <i class="fas fa-qrcode text-gray-400 text-6xl mb-4"></i>
+                    <p class="text-gray-600 mb-4">Position QR code within frame</p>
+                    <button onclick="simulateQRScan()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-camera mr-2"></i>Simulate Scan
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Verification Result (Initially Hidden) -->
+        <div id="verificationResult" class="hidden">
+            <!-- Product Information -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-check-circle text-green-600 text-2xl"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">✓ Authentic Product Verified</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-semibold text-gray-700 mb-2">Product Details</h4>
+                                <div class="space-y-2 text-sm">
+                                    <div><span class="font-medium">Name:</span> Paracetamol 500mg</div>
+                                    <div><span class="font-medium">Batch ID:</span> PCM-500-001</div>
+                                    <div><span class="font-medium">Manufacturing Date:</span> 2024-09-01</div>
+                                    <div><span class="font-medium">Expiry Date:</span> 2027-09-01</div>
+                                    <div><span class="font-medium">Dosage:</span> 500mg tablets</div>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-700 mb-2">Manufacturer Details</h4>
+                                <div class="space-y-2 text-sm">
+                                    <div><span class="font-medium">Company:</span> PharmaCorp Ltd</div>
+                                    <div><span class="font-medium">License:</span> MFG-2024-PC-001</div>
+                                    <div><span class="font-medium">Quality Certified:</span> ✓ ISO 9001:2015</div>
+                                    <div><span class="font-medium">GMP Certified:</span> ✓ WHO-GMP</div>
+                                    <div><span class="font-medium">Location:</span> Mumbai, India</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Supply Chain Journey -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-6">Supply Chain Journey</h3>
+                <div class="space-y-6">
+                    <div class="timeline-item">
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-semibold text-blue-800">Manufacturing Completed</h4>
+                                    <p class="text-blue-600 text-sm">PharmaCorp Ltd - Mumbai Facility</p>
+                                    <p class="text-gray-600 text-sm mt-1">Batch PCM-500-001 manufactured and quality tested</p>
+                                </div>
+                                <span class="text-blue-600 text-sm font-medium">Sep 1, 2024</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="bg-yellow-50 p-4 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-semibold text-yellow-800">Distributed to Supplier</h4>
+                                    <p class="text-yellow-600 text-sm">MedSupply Co. - Regional Hub</p>
+                                    <p class="text-gray-600 text-sm mt-1">Temperature controlled transport maintained at 2-8°C</p>
+                                </div>
+                                <span class="text-yellow-600 text-sm font-medium">Sep 5, 2024</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-semibold text-purple-800">Shipped to Pharmacy</h4>
+                                    <p class="text-purple-600 text-sm">HealthPlus Pharmacy - Downtown</p>
+                                    <p class="text-gray-600 text-sm mt-1">Express delivery via FedEx, tracking: 1234567890</p>
+                                </div>
+                                <span class="text-purple-600 text-sm font-medium">Sep 8, 2024</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-semibold text-green-800">Available for Purchase</h4>
+                                    <p class="text-green-600 text-sm">HealthPlus Pharmacy - Downtown</p>
+                                    <p class="text-gray-600 text-sm mt-1">Product verified and available for consumer purchase</p>
+                                </div>
+                                <span class="text-green-600 text-sm font-medium">Sep 10, 2024</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blockchain Verification -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-6">Blockchain Verification</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-3">Immutable Record</h4>
+                        <div class="bg-gray-50 p-4 rounded-lg font-mono text-sm">
+                            <div class="mb-2"><span class="text-gray-600">Block Hash:</span></div>
+                            <div class="text-xs break-all text-blue-600">0x7f9c8e6d4b2a1e8f3c5d9a2b7e4f1c8d6a9b3e7f2c5d8a1b4e7f9c2d5a8b1e4f</div>
+                            <div class="mt-3 mb-2"><span class="text-gray-600">Transaction ID:</span></div>
+                            <div class="text-xs break-all text-green-600">0xa1b2c3d4e5f6789012345678901234567890abcdef</div>
+                            <div class="mt-3"><span class="text-gray-600">Verified:</span> <span class="text-green-600">✓ Valid</span></div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-3">Integrity Checks</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">Product Hash Match</span>
+                                <span class="text-green-600"><i class="fas fa-check-circle"></i></span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">Supply Chain Integrity</span>
+                                <span class="text-green-600"><i class="fas fa-check-circle"></i></span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">Temperature Log Verified</span>
+                                <span class="text-green-600"><i class="fas fa-check-circle"></i></span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">Expiry Date Valid</span>
+                                <span class="text-green-600"><i class="fas fa-check-circle"></i></span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">No Recalls Found</span>
+                                <span class="text-green-600"><i class="fas fa-check-circle"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Safety Information -->
+            <div class="bg-blue-50 rounded-xl p-6">
+                <h3 class="text-xl font-bold text-blue-800 mb-4">
+                    <i class="fas fa-info-circle mr-2"></i>Safety Information
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+                    <div>
+                        <h4 class="font-semibold text-blue-700 mb-2">Dosage Instructions</h4>
+                        <ul class="space-y-1 text-blue-600">
+                            <li>• Adults: 1-2 tablets every 4-6 hours</li>
+                            <li>• Maximum 8 tablets in 24 hours</li>
+                            <li>• Take with or after food</li>
+                            <li>• Do not exceed recommended dose</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-blue-700 mb-2">Storage Conditions</h4>
+                        <ul class="space-y-1 text-blue-600">
+                            <li>• Store at room temperature (15-30°C)</li>
+                            <li>• Keep in original packaging</li>
+                            <li>• Protect from moisture and light</li>
+                            <li>• Keep out of reach of children</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sample QR Codes for Testing -->
+        <div class="bg-white rounded-xl shadow-sm p-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-6">Sample QR Codes for Testing</h3>
+            <p class="text-gray-600 mb-4">Click on any QR code below to simulate scanning:</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center cursor-pointer" onclick="simulateQRScan('PCM-500-001')">
+                    <div class="w-32 h-32 bg-gray-100 mx-auto mb-2 flex items-center justify-center rounded-lg">
+                        <i class="fas fa-qrcode text-gray-400 text-4xl"></i>
+                    </div>
+                    <p class="text-sm font-medium">Paracetamol 500mg</p>
+                    <p class="text-xs text-gray-500">Batch: PCM-500-001</p>
+                </div>
+                
+                <div class="text-center cursor-pointer" onclick="simulateQRScan('AMX-250-002')">
+                    <div class="w-32 h-32 bg-gray-100 mx-auto mb-2 flex items-center justify-center rounded-lg">
+                        <i class="fas fa-qrcode text-gray-400 text-4xl"></i>
+                    </div>
+                    <p class="text-sm font-medium">Amoxicillin 250mg</p>
+                    <p class="text-xs text-gray-500">Batch: AMX-250-002</p>
+                </div>
+                
+                <div class="text-center cursor-pointer" onclick="simulateQRScan('VTD-1000-003')">
+                    <div class="w-32 h-32 bg-gray-100 mx-auto mb-2 flex items-center justify-center rounded-lg">
+                        <i class="fas fa-qrcode text-gray-400 text-4xl"></i>
+                    </div>
+                    <p class="text-sm font-medium">Vitamin D3 1000IU</p>
+                    <p class="text-xs text-gray-500">Batch: VTD-1000-003</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function simulateQRScan(batchId = 'PCM-500-001') {
+            // Simulate scanning delay
+            document.getElementById('verificationResult').classList.add('hidden');
+            
+            // Show loading state
+            const scanButton = document.querySelector('button[onclick="simulateQRScan()"]');
+            const originalText = scanButton.innerHTML;
+            scanButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Scanning...';
+            scanButton.disabled = true;
+            
+            setTimeout(() => {
+                // Show verification result
+                document.getElementById('verificationResult').classList.remove('hidden');
+                
+                // Scroll to result
+                document.getElementById('verificationResult').scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+                
+                // Reset button
+                scanButton.innerHTML = originalText;
+                scanButton.disabled = false;
+                
+                // Update product info based on batch ID
+                updateProductInfo(batchId);
+            }, 2000);
+        }
+        
+        function updateProductInfo(batchId) {
+            const products = {
+                'PCM-500-001': {
+                    name: 'Paracetamol 500mg',
+                    manufacturer: 'PharmaCorp Ltd',
+                    mfgDate: '2024-09-01',
+                    expDate: '2027-09-01'
+                },
+                'AMX-250-002': {
+                    name: 'Amoxicillin 250mg',
+                    manufacturer: 'BioPharm Inc',
+                    mfgDate: '2024-06-15',
+                    expDate: '2026-12-15'
+                },
+                'VTD-1000-003': {
+                    name: 'Vitamin D3 1000IU',
+                    manufacturer: 'VitaHealth Co',
+                    mfgDate: '2024-03-20',
+                    expDate: '2027-03-20'
+                }
+            };
+            
+            const product = products[batchId] || products['PCM-500-001'];
+            
+            // Update product details in the verification result
+            // This would normally be done by updating the DOM elements
+            console.log('Product verified:', product);
+        }
+        
+        // Check if batch ID is passed in URL parameters
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const batchId = urlParams.get('batch');
+            if (batchId) {
+                setTimeout(() => simulateQRScan(batchId), 1000);
+            }
+        };
+    </script>
+</body>
+</html>
