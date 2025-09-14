@@ -331,8 +331,8 @@
 - EU Pharmaceutical Supply Chain Regulations
 
 #### **🌐 Live Demo & Code**
-- **GitHub Repository:** github.com/Prabhu6626/MediLedger
-- **Live Demo:** [Your Deployment URL]
+- **GitHub Repository:** github.com/Sudharshan2226/MediLedger-
+- **Live Demo:**: https://sudharshan2226.github.io/Mediledger-/index.html
 - **Technical Documentation:** Complete README.md
 
 ---

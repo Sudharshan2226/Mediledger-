@@ -202,7 +202,7 @@ Consumer → Scans QR Code → Views History → Verification Complete
 ### **Installation**
 ```bash
 # Clone the repository
-git clone https://github.com/Prabhu6626/MediLedger.git
+git clone github.com/Sudharshan2226/MediLedger-.git
 cd MediLedger
 
 # Create virtual environment with uv
@@ -320,7 +320,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Project Team:** [Your Team Name]  
 **Team Leader:** [Your Name]  
 **Email:** [your.email@example.com]  
-**GitHub:** [https://github.com/Prabhu6626/MediLedger](https://github.com/Prabhu6626/MediLedger)
+**GitHub:** github.com/Sudharshan2226/MediLedger-
 
 ---
 
