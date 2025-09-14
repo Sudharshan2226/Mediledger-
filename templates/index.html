@@ -1,151 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Medical Tracking System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-500 to-purple-600 min-h-screen">
+    <div class="container mx-auto px-4 h-screen flex items-center justify-center">
+        <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 w-full max-w-2xl shadow-2xl">
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold text-white mb-4 animate-fade-in">
+                    Medical Tracking System
+                </h1>
+                <p class="text-xl text-white/90 mb-8 animate-slide-up">
+                    Secure and efficient medical product management platform
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <a href="{{ url_for('login') }}" 
+                   class="group bg-white/20 hover:bg-white/30 transition-all duration-300 rounded-xl p-6 text-center">
+                    <div class="text-white text-4xl mb-4">👤</div>
+                    <h2 class="text-white text-xl font-semibold mb-2">Login</h2>
+                    <p class="text-white/80 text-sm">Access your dashboard</p>
+                </a>
+                
+                <a href="{{ url_for('register') }}" 
+                   class="group bg-white/20 hover:bg-white/30 transition-all duration-300 rounded-xl p-6 text-center">
+                    <div class="text-white text-4xl mb-4">✨</div>
+                    <h2 class="text-white text-xl font-semibold mb-2">Register</h2>
+                    <p class="text-white/80 text-sm">Create new account</p>
+                </a>
+                
+                <a href="{{ url_for('login') }}" 
+                   class="group bg-white/20 hover:bg-white/30 transition-all duration-300 rounded-xl p-6 text-center">
+                    <div class="text-white text-4xl mb-4">💊</div>
+                    <h2 class="text-white text-xl font-semibold mb-2">Quick Access</h2>
+                    <p class="text-white/80 text-sm">Prescription-less system</p>
+                </a>
+            </div>
+            
+            <footer class="mt-12 text-center text-white/60">
+                <p>&copy; 2025 Medical Tracking System. All rights reserved.</p>
+            </footer>
+        </div>
+    </div>
+
     <style>
-        /* General Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #4CAF50, #2196F3);
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-            animation: bg-animation 10s infinite alternate;
-        }
-
-        @keyframes bg-animation {
-            0% {
-                background: linear-gradient(135deg, #4CAF50, #2196F3);
-            }
-            50% {
-                background: linear-gradient(135deg, #2196F3, #4CAF50);
-            }
-            100% {
-                background: linear-gradient(135deg, #4CAF50, #2196F3);
-            }
-        }
-
-        .container {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.15);
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4);
-            max-width: 800px;
-            width: 200%;
-            animation: fade-in 2s ease-in-out;
-        }
-
         @keyframes fade-in {
-            0% {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
-
-        .container h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            font-weight: bold;
-            animation: text-slide-in 1.5s ease-in-out;
+        
+        @keyframes slide-up {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
-
-        @keyframes text-slide-in {
-            0% {
-                transform: translateX(-100%);
-                opacity: 0;
-            }
-            100% {
-                transform: translateX(0);
-                opacity: 1;
-            }
+        
+        .animate-fade-in {
+            animation: fade-in 1s ease-out;
         }
-
-        .container p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            line-height: 1.5;
-            animation: text-fade-in 2s ease-in-out;
-        }
-
-        @keyframes text-fade-in {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 0.8rem 2rem;
-            margin: 0.5rem;
-            font-size: 1rem;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 50px;
-            background: #1E88E5;
-            transition: background 0.3s, transform 0.3s;
-            animation: button-bounce 2s infinite ease-in-out;
-        }
-
-        .btn:hover {
-            background: #1565C0;
-            transform: scale(1.1);
-        }
-
-        .btn-primary {
-            background: #43A047;
-        }
-
-        .btn-primary:hover {
-            background: #2E7D32;
-        }
-
-        @keyframes button-bounce {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-5px);
-            }
-        }
-
-        footer {
-            margin-top: 2rem;
-            font-size: 0.9rem;
-            opacity: 0.8;
-            animation: fade-in 2s ease-in-out;
+        
+        .animate-slide-up {
+            animation: slide-up 1s ease-out;
         }
     </style>
-</head>
-
-<body>
-    <div class="container">
-        <h1>Welcome to Medical Tracking System</h1>
-        <p>Effortlessly manage, track, and secure your medical products and distribution stages.</p>
-        <a href="{{ url_for('login') }}" class="btn">Login</a>
-        <a href="{{ url_for('register') }}" class="btn btn-primary">Register</a>
-        <a href="{{ url_for('login') }}" class="btn btn-primary">Prescription less system</a>
-        <footer>&copy; 2025 Medical Tracking System. All rights reserved.</footer>
-    </div>
 </body>
-
 </html>

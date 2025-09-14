@@ -6,139 +6,597 @@
     <title>MediLedger - Manufacturer Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        #sidebar {
+            transform: translateX(0);
+            transition: transform 0.3s ease-in-out;
+        }
+        .sidebar-hidden {
+            transform: translateX(-100%);
+        }
+        .content-expanded {
+            margin-left: 0;
+        }
+    </style>
 </head>
-<body class="bg-gray-100">
-    <header class="bg-blue-600 text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-4">
-                <img src="/static/logo.png" alt="MediLedger Logo" class="h-10 w-10">
-                <h1 class="text-2xl font-bold">MediLedger</h1>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Sidebar -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out">
+        <div class="h-full flex flex-col">
+            <div class="p-6 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="gradient-bg p-2 rounded-lg">
+                        <i class="fas fa-pills text-white text-xl"></i>
+                    </div>
+                    <span class="text-2xl font-bold bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent">
+                        MediLedger
+                    </span>
+                </div>
+                <button id="sidebarToggle" class="p-2 rounded-lg hover:bg-gray-100">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
-            <nav class="space-x-4">
-                <a href="#home" class="hover:text-blue-200">Home</a>
-                <a href="#about" class="hover:text-blue-200">About</a>
-                <a href="{{ url_for('logout') }}" class="bg-red-500 hover:bg-red-600 px-3 py-2 rounded">
-                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+
+            <nav class="flex-1 px-4 space-y-2">
+                <a href="#dashboard" class="flex items-center space-x-3 p-3 rounded-lg bg-blue-50 text-blue-700">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#products" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                    <i class="fas fa-box"></i>
+                    <span>Products</span>
+                </a>
+                <a href="#inventory" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                    <i class="fas fa-warehouse"></i>
+                    <span>Inventory</span>
+                </a>
+                <a href="#reports" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Reports</span>
                 </a>
             </nav>
+
+            <div class="p-4 border-t">
+                <div class="flex items-center space-x-3">
+                    <img src="https://ui-avatars.com/api/?name={{ current_user.username }}" 
+                         class="w-10 h-10 rounded-full">
+                    <div>
+                        <p class="font-medium">{{ current_user.username }}</p>
+                        <p class="text-sm text-gray-500">Manufacturer</p>
+                    </div>
+                </div>
+                <a href="{{ url_for('logout') }}" 
+                   class="mt-4 block w-full p-2 text-center text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </a>
+            </div>
         </div>
-    </header>
+    </div>
 
-    <div class="container mx-auto mt-8 px-4">
-        <div class="bg-white shadow-md rounded-lg p-6">
-            <h2 class="text-2xl font-bold mb-6 text-gray-800">Add New Product</h2>
-            <form method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-gray-700 font-bold mb-2" for="name">Product Name</label>
-                        <input type="text" name="name" required 
-                            class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                            placeholder="Enter product name...">
+    <!-- Main Content -->
+    <div class="ml-64 p-8">
+        <!-- Header -->
+        <header class="mb-8">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800">Dashboard</h1>
+                    <p class="text-gray-500">Welcome back, {{ current_user.username }}</p>
+                </div>
+                <div class="flex space-x-4">
+                    <button id="darkModeToggle" class="p-2 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="p-2 rounded-lg hover:bg-gray-100" onclick="toggleNotifications()">
+                        <i class="fas fa-bell"></i>
+                        {% if alerts %}
+                        <span class="absolute -mt-2 -mr-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
+                            {{ alerts|length }}
+                        </span>
+                        {% endif %}
+                    </button>
+                    <button id="sidebarToggle" class="p-2 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-sm p-6 card-hover">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                        <i class="fas fa-pills text-2xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-gray-500">Total Products</p>
+                        <h3 class="text-2xl font-bold" data-counter="{{ products|length }}">0</h3>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="w-full bg-gray-100 rounded-full h-2">
+                        <div class="bg-blue-600 rounded-full h-2" style="width: {{ (products|length / 100.0 * 100)|round }}%">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm p-6 card-hover">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-green-100 text-green-600">
+                        <i class="fas fa-check-circle text-2xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-gray-500">Active Batches</p>
+                        <h3 class="text-2xl font-bold" data-counter="{{ products|selectattr('status', 'equalto', 'active')|list|length }}">0</h3>
+                    </div>
+                </div>
+                <div id="activeBatchesChart" class="mt-4 h-16"></div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm p-6 card-hover">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+                        <i class="fas fa-qrcode text-2xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-gray-500">QR Codes</p>
+                        <h3 class="text-2xl font-bold" data-counter="{{ products|length }}">0</h3>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <canvas id="qrCodeChart" height="64"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm p-6 card-hover">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                        <i class="fas fa-exclamation-triangle text-2xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-gray-500">Alerts</p>
+                        <h3 class="text-2xl font-bold" data-counter="{{ alerts|length }}">0</h3>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-500">Critical</span>
+                        <span class="text-red-500">{{ alerts|selectattr('type', 'equalto', 'critical')|list|length }}</span>
+                    </div>
+                    <div class="flex justify-between text-sm mt-2">
+                        <span class="text-gray-500">Warnings</span>
+                        <span class="text-yellow-500">{{ alerts|selectattr('type', 'equalto', 'warning')|list|length }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Product Form -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Add New Product</h2>
+                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                        onclick="toggleProductForm()">
+                    <i class="fas fa-plus mr-2"></i>New Product
+                </button>
+            </div>
+
+            <form method="POST" id="productForm" class="hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div class="relative">
+                            <label class="block text-sm font-medium text-gray-700">Product Name</label>
+                            <div class="mt-1 relative rounded-lg">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-capsules text-gray-400"></i>
+                                </div>
+                                <input type="text" name="name" required 
+                                       class="pl-10 block w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <div class="relative">
+                            <label class="block text-sm font-medium text-gray-700">Product ID</label>
+                            <div class="mt-1 relative rounded-lg">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-fingerprint text-gray-400"></i>
+                                </div>
+                                <input type="text" name="product_id" required 
+                                       class="pl-10 block w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Medicine Type</label>
+                            <select name="medicine_type" required 
+                                    class="mt-1 block w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+                                {% for type in medicine_types %}
+                                    <option value="{{ type }}">{{ type }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Medicine Form</label>
+                            <select name="medicine_form" required 
+                                    class="mt-1 block w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+                                {% for form in medicine_forms %}
+                                    <option value="{{ form }}">{{ form }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
 
-                    <div>
-                        <label class="block text-gray-700 font-bold mb-2" for="product_id">Product ID</label>
-                        <input type="text" name="product_id" required 
-                            class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                            placeholder="Enter unique product ID">
-                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Description</label>
+                            <textarea name="description" rows="3" 
+                                      class="mt-1 block w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                        </div>
 
-                    <div>
-                        <label class="block text-gray-700 font-bold mb-2" for="medicine_type">Medicine Type</label>
-                        <select name="medicine_type" required 
-                            class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="">Select Medicine Type</option>
-                            {% for type in medicine_types %}
-                                <option value="{{ type }}">{{ type }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Manufacturing Date</label>
+                                <input type="date" name="manufacturing_date" required 
+                                       class="mt-1 block w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Expiration Date</label>
+                                <input type="date" name="expiration_date" required 
+                                       class="mt-1 block w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                        </div>
 
-                    <div>
-                        <label class="block text-gray-700 font-bold mb-2" for="medicine_form">Medicine Form</label>
-                        <select name="medicine_form" required 
-                            class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="">Select Medicine Form</option>
-                            {% for form in medicine_forms %}
-                                <option value="{{ form }}">{{ form }}</option>
-                            {% endfor %}
-                        </select>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Dosage Information</label>
+                            <input type="text" name="dosage" 
+                                   class="mt-1 block w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Side Effects</label>
+                            <textarea name="side_effects" rows="2"
+                                      class="mt-1 block w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Storage Conditions</label>
+                            <input type="text" name="storage_conditions" 
+                                   class="mt-1 block w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Price ($)</label>
+                                <input type="number" step="0.01" name="price" 
+                                       class="mt-1 block w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Quantity</label>
+                                <input type="number" name="quantity" 
+                                       class="mt-1 block w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Reorder Level</label>
+                                <input type="number" name="reorder_level" value="10"
+                                       class="mt-1 block w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Assign Distributor</label>
+                            <select name="distributor_id" required 
+                                    class="mt-1 block w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="">Select Distributor</option>
+                                {% for distributor in distributors %}
+                                    <option value="{{ distributor.id }}">{{ distributor.username }} - {{ distributor.company_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
                 </div>
 
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-gray-700 font-bold mb-2" for="description">Product Description</label>
-                        <textarea name="description" 
-                            class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                            placeholder="Provide product details" rows="3"></textarea>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-gray-700 font-bold mb-2" for="manufacturing_date">Manufacturing Date</label>
-                            <input type="date" name="manufacturing_date" required 
-                                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-bold mb-2" for="expiration_date">Expiration Date</label>
-                            <input type="date" name="expiration_date" required 
-                                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700 font-bold mb-2" for="dosage">Dosage</label>
-                        <input type="text" name="dosage" 
-                            class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                            placeholder="e.g., 500mg, 2 tablets daily">
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700 font-bold mb-2" for="side_effects">Potential Side Effects</label>
-                        <textarea name="side_effects" 
-                            class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                            placeholder="List known side effects" rows="3"></textarea>
-                    </div>
-
-                    <div class="mt-4">
-                        <button type="submit" 
-                            class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-300">
-                            <i class="fas fa-plus-circle mr-2"></i>Add Product
-                        </button>
-                    </div>
+                <div class="mt-6 flex justify-end space-x-4">
+                    <button type="button" 
+                            class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                            onclick="toggleProductForm()">
+                        Cancel
+                    </button>
+                    <button type="submit" 
+                            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-plus mr-2"></i>Add Product
+                    </button>
                 </div>
             </form>
         </div>
 
-        <div class="mt-8 bg-white shadow-md rounded-lg p-6">
-            <h2 class="text-2xl font-bold mb-6 text-gray-800">Your Products</h2>
+        <!-- Products Grid -->
+        <div class="bg-white rounded-xl shadow-sm p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Product Inventory</h2>
+                <div class="flex space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Search products..." 
+                               class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                    <select class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">All Categories</option>
+                        {% for type in medicine_types %}
+                            <option value="{{ type }}">{{ type }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {% for product in products %}
-                <div class="border rounded-lg p-4 hover:shadow-lg transition duration-300">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-semibold">{{ product.name }}</h3>
-                        <span class="text-sm text-gray-500">Batch: {{ product.batch_id }}</span>
+                <div class="border rounded-lg p-6 hover:shadow-lg transition-shadow card-hover">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">{{ product.name }}</h3>
+                            <p class="text-sm text-gray-500">ID: {{ product.product_id }}</p>
+                        </div>
+                        <span class="px-3 py-1 text-sm rounded-full 
+                                   {{ 'bg-green-100 text-green-800' if product.status == 'active' else 'bg-gray-100 text-gray-800' }}">
+                            {{ product.status|default('Active', true) }}
+                        </span>
                     </div>
-                    <img src="{{ url_for('static', filename='qr_codes/' ~ product.batch_id ~ '.png') }}" 
-                         alt="QR Code" class="w-32 h-32 mx-auto mb-4">
-                    <div class="space-y-2 text-sm">
-                        <p><strong>Product ID:</strong> {{ product.product_id }}</p>
-                        <p><strong>Type:</strong> {{ product.medicine_type }}</p>
-                        <p><strong>Form:</strong> {{ product.medicine_form }}</p>
-                        <p><strong>Manufactured:</strong> {{ product.manufacturing_date }}</p>
-                        <p><strong>Expires:</strong> {{ product.expiration_date }}</p>
+                    
+                    <div class="space-y-3 text-sm text-gray-600">
+                        <div class="flex items-center">
+                            <i class="fas fa-capsules w-5 text-blue-500"></i>
+                            <span>{{ product.medicine_type }}</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-prescription-bottle w-5 text-purple-500"></i>
+                            <span>{{ product.medicine_form }}</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-calendar w-5 text-red-500"></i>
+                            <span>Expires: {{ product.expiration_date }}</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <div class="relative group">
+                            <img src="{{ url_for('static', filename='qr_codes/' ~ product.batch_id ~ '.png') }}" 
+                                 alt="QR Code" class="w-32 h-32 mx-auto rounded-lg shadow-sm">
+                            <div class="absolute inset-0 bg-black bg-opacity-50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <button class="text-white hover:text-blue-200 transition-colors">
+                                    <i class="fas fa-download text-xl"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <p class="text-center text-sm text-gray-500 mt-2">Batch: {{ product.batch_id }}</p>
+                    </div>
+
+                    <div class="mt-6 flex justify-center space-x-4">
+                        <a href="{{ url_for('track_product', batch_id=product.batch_id) }}" 
+                           class="flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+                            <i class="fas fa-external-link-alt mr-2"></i>
+                            View Details
+                        </a>
+                        <button class="flex items-center text-gray-600 hover:text-gray-800 transition-colors">
+                            <i class="fas fa-qrcode mr-2"></i>
+                            Share QR
+                        </button>
                     </div>
                 </div>
                 {% endfor %}
             </div>
         </div>
     </div>
-
-    <footer class="bg-blue-600 text-white py-4 mt-8">
-        <div class="container mx-auto text-center">
-            <p>&copy; 2024 MediLedger. All rights reserved.</p>
+     <!-- Chat Widget -->
+     <div id="chat-widget" class="fixed bottom-4 right-4 z-50">
+        <!-- Chat Button -->
+        <button id="chat-button" class="bg-blue-600 text-white rounded-full p-4 shadow-lg hover:bg-blue-700 transition-colors">
+            <i class="fas fa-comments text-2xl"></i>
+        </button>
+        <!-- Chat Window -->
+        <div id="chat-window" class="hidden bg-white rounded-lg shadow-xl w-[360px] h-[500px] absolute bottom-16 right-0 overflow-hidden">
+            <!-- Chat Header -->
+            <div class="bg-blue-600 text-white p-4 rounded-t-lg flex justify-between items-center">
+                <h3 class="font-semibold">Support Assistant</h3>
+                <button id="close-chat" class="text-white hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <!-- Chat Messages -->
+            <div id="chat-messages" class="p-4 h-[calc(100%-120px)] overflow-y-auto">
+                <div class="mb-4">
+                    <div class="bg-gray-100 rounded-lg p-3 inline-block">
+                        Hello! How can I assist you with managing your pharmaceutical products today?
+                    </div>
+                </div>
+            </div>
+            <!-- Chat Input -->
+            <div class="p-4 border-t">
+                <form id="chat-form" class="flex gap-2">
+                    <input type="text" 
+                           id="chat-input"
+                           placeholder="Type your message..." 
+                           class="flex-1 rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500">
+                    <button type="submit" 
+                            class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center">
+                        <i class="fas fa-paper-plane" id="send-icon"></i>
+                        <i class="fas fa-spinner fa-spin hidden" id="loading-icon"></i>
+                    </button>
+                </form>
+            </div>
         </div>
-    </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Toggle Product Form Function
+        function toggleProductForm() {
+            const form = document.getElementById('productForm');
+            form.classList.toggle('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize Charts
+            const activeBatchesChart = new ApexCharts(document.querySelector("#activeBatchesChart"), {
+                chart: {
+                    type: 'area',
+                    height: 64,
+                    sparkline: { enabled: true },
+                    toolbar: { show: false }
+                },
+                stroke: { curve: 'smooth', width: 2 },
+                fill: {
+                    type: 'gradient',
+                    gradient: { shadeIntensity: 1, opacityFrom: 0.7, opacityTo: 0.3 }
+                },
+                series: [{ name: 'Active Batches', data: [30, 40, 35, 50, 49, 60, 70, 91, 125] }],
+                colors: ['#10B981']
+            });
+            activeBatchesChart.render();
+
+            const qrCodeCtx = document.getElementById('qrCodeChart').getContext('2d');
+            new Chart(qrCodeCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'QR Codes Generated',
+                        data: [12, 19, 3, 5, 2, 3],
+                        borderColor: '#8B5CF6',
+                        tension: 0.4,
+                        borderWidth: 2,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    plugins: { legend: { display: false } },
+                    scales: { x: { display: false }, y: { display: false } },
+                    maintainAspectRatio: false
+                }
+            });
+
+            // Chat Widget
+            const chatButton = document.getElementById('chat-button');
+            const chatWindow = document.getElementById('chat-window');
+            const closeChat = document.getElementById('close-chat');
+            const chatForm = document.getElementById('chat-form');
+            const chatInput = document.getElementById('chat-input');
+            const chatMessages = document.getElementById('chat-messages');
+
+            let isTyping = false;
+
+            chatButton.addEventListener('click', () => {
+                chatWindow.classList.toggle('hidden');
+                if (!chatWindow.classList.contains('hidden')) {
+                    chatInput.focus();
+                }
+            });
+
+            closeChat.addEventListener('click', () => {
+                chatWindow.classList.add('hidden');
+            });
+
+            chatForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const message = chatInput.value.trim();
+                if (!message) return;
+
+                appendMessage(message, 'user');
+                chatInput.value = '';
+                showTypingIndicator();
+
+                try {
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    const response = `I understand you're asking about ${message}. Let me help you with that.`;
+                    appendMessage(response, 'ai');
+                } catch (error) {
+                    console.error('Error:', error);
+                    appendMessage('Sorry, I encountered an error. Please try again.', 'ai');
+                } finally {
+                    hideTypingIndicator();
+                }
+            });
+
+            function appendMessage(message, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `flex items-start space-x-3 ${sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`;
+
+                const avatar = document.createElement('div');
+                avatar.className = `w-8 h-8 rounded-full ${sender === 'user' ? 'bg-blue-600' : 'bg-blue-100'} flex items-center justify-center`;
+
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'flex-1';
+
+                const messageBubble = document.createElement('div');
+                messageBubble.className = `${sender === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-800'} rounded-2xl ${sender === 'user' ? 'rounded-tr-none' : 'rounded-tl-none'} p-4 inline-block`;
+                messageBubble.textContent = message;
+
+                const timestamp = document.createElement('p');
+                timestamp.className = 'text-xs text-gray-500 mt-1';
+                timestamp.textContent = 'Just now';
+
+                contentDiv.appendChild(messageBubble);
+                contentDiv.appendChild(timestamp);
+
+                messageDiv.appendChild(avatar);
+                messageDiv.appendChild(contentDiv);
+
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function showTypingIndicator() {
+                if (!isTyping) {
+                    isTyping = true;
+                    const indicator = document.createElement('div');
+                    indicator.id = 'typing-indicator';
+                    indicator.className = 'flex items-start space-x-3';
+                    indicator.innerHTML = '<div class="bg-gray-200 rounded-full w-3 h-3 animate-bounce"></div>';
+                    chatMessages.appendChild(indicator);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+            }
+
+            function hideTypingIndicator() {
+                const indicator = document.getElementById('typing-indicator');
+                if (indicator) {
+                    indicator.remove();
+                    isTyping = false;
+                }
+            }
+
+            // Sidebar Toggle
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+            const content = document.querySelector('.ml-64');
+
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('sidebar-hidden');
+                content.classList.toggle('content-expanded');
+            });
+        });
+    </script>
 </body>
 </html>

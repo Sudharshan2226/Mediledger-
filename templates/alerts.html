@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediLedger - Alerts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-white border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-blue-600">MediLedger</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="{{ url_for('alerts') }}" class="relative">
+                        <i class="fas fa-bell text-xl"></i>
+                        {% if unread_alerts %}
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 text-xs flex items-center justify-center">
+                            {{ unread_alerts }}
+                        </span>
+                        {% endif %}
+                    </a>
+                    <span class="text-gray-600">Welcome, {{ current_user.username }}</span>
+                    <a href="{{ url_for('logout') }}" 
+                       class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors">
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-white rounded-xl shadow-sm p-6">
+            <h2 class="text-2xl font-bold mb-6">Alerts & Notifications</h2>
+            
+            <div class="space-y-4">
+                {% for alert in alerts %}
+                <div class="border rounded-lg p-4 {{ 'bg-blue-50' if not alert.is_read else 'bg-white' }}">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-exclamation-circle 
+                                          {{ 'text-red-500' if alert.type == 'expiry' else 'text-yellow-500' if alert.type == 'inventory' else 'text-blue-500' }}">
+                                </i>
+                                <span class="font-semibold">{{ alert.type|title }} Alert</span>
+                            </div>
+                            <p class="mt-2">{{ alert.message }}</p>
+                            <p class="text-sm text-gray-500 mt-1">{{ alert.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                        </div>
+                        {% if not alert.is_read %}
+                        <a href="{{ url_for('mark_alert_read', alert_id=alert.id) }}" 
+                           class="text-blue-600 hover:text-blue-800">
+                            Mark as Read
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+                
+                {% if not alerts %}
+                <div class="text-center py-8 text-gray-500">
+                    <i class="fas fa-check-circle text-4xl mb-4"></i>
+                    <p>No alerts at this time</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

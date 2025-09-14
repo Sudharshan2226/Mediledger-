@@ -3,112 +3,482 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Distributor Tracking</title>
+    <title>MediLedger - Distributor Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100">
-    <div class="container mx-auto p-6">
-        <h1 class="text-3xl font-bold mb-6">Medicine Transport Tracking</h1>
-        
-        <form id="trackingForm" method="POST" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2">Select Product</label>
-                <select name="product_id" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
-                    {% for product in products %}
-                    <option value="{{ product.id }}">
-                        {{ product.name }} (Batch: {{ product.batch_id }})
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
-            
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2">Tracking Status</label>
-                <select name="tracking_status" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
-                    <option value="In Transit">In Transit</option>
-                    <option value="Warehouse">In Warehouse</option>
-                    <option value="Dispatched">Dispatched</option>
-                    <option value="Delivered">Delivered</option>
-                </select>
-            </div>
-            
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2">Current Location</label>
+<body class="bg-gray-50">
+    <!-- Navbar -->
+    <nav class="bg-white border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
                 <div class="flex items-center">
-                    <input type="text" id="currentLocation" name="current_location" 
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mr-2"
-                        placeholder="Enter or auto-detect location">
-                    <button type="button" id="geolocateBtn" 
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                        🌍 Detect Location
+                    <span class="text-2xl font-bold text-blue-600">MediLedger</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-gray-600">Welcome, {{ current_user.username }}</span>
+                    <a href="{{ url_for('logout') }}" 
+                       class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors">
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Stats Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                        <i class="fas fa-box text-2xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-gray-500">Total Shipments</p>
+                        <h3 class="text-2xl font-bold">{{ products|length }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                        <i class="fas fa-truck text-2xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-gray-500">In Transit</p>
+                        <h3 class="text-2xl font-bold">{{ products|selectattr('status', 'equalto', 'In Transit')|list|length }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-green-100 text-green-600">
+                        <i class="fas fa-check-circle text-2xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-gray-500">Delivered</p>
+                        <h3 class="text-2xl font-bold">{{ products|selectattr('status', 'equalto', 'Delivered')|list|length }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+                        <i class="fas fa-warehouse text-2xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-gray-500">In Warehouse</p>
+                        <h3 class="text-2xl font-bold">{{ products|selectattr('status', 'equalto', 'Warehouse')|list|length }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tracking Form -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+            <h2 class="text-2xl font-bold mb-6">Update Shipment Status</h2>
+            <form id="trackingForm" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Select Product</label>
+                        <select name="product_id" required 
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            {% for product in products %}
+                            <option value="{{ product.id }}">
+                                {{ product.name }} (Batch: {{ product.batch_id }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Tracking Status</label>
+                        <select name="tracking_status" required 
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <option value="In Transit">In Transit</option>
+                            <option value="Warehouse">In Warehouse</option>
+                            <option value="Dispatched">Dispatched</option>
+                            <option value="Delivered">Delivered</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Current Location</label>
+                        <div class="mt-1 flex rounded-md shadow-sm">
+                            <input type="text" id="currentLocation" name="current_location" required
+                                   class="flex-1 rounded-l-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                   placeholder="Enter or auto-detect location">
+                            <button type="button" id="geolocateBtn"
+                                    class="inline-flex items-center px-4 py-2 border border-l-0 border-gray-300 rounded-r-md 
+                                           bg-gray-50 text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-location-dot"></i>
+                            </button>
+                        </div>
+                        <p id="locationError" class="mt-2 text-sm text-red-600 hidden"></p>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Temperature (°C)</label>
+                            <input type="number" step="0.1" name="temperature"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Humidity (%)</label>
+                            <input type="number" step="0.1" name="humidity"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Transport Conditions</label>
+                        <textarea name="transport_conditions" rows="3"
+                                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Expected Delivery Date</label>
+                        <input type="date" name="expected_delivery_date"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Carrier</label>
+                        <input type="text" name="carrier" placeholder="e.g., FedEx, UPS, DHL"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Tracking Number</label>
+                        <input type="text" name="tracking_number" 
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Assign to Pharmacy</label>
+                        <select name="pharmacy_id" required 
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <option value="">Select Pharmacy</option>
+                            {% for pharmacy in pharmacies %}
+                                <option value="{{ pharmacy.id }}">{{ pharmacy.username }} - {{ pharmacy.company_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Notes</label>
+                        <textarea name="notes" rows="2" placeholder="Additional notes or comments"
+                                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                    </div>
+                </div>
+
+                <div class="col-span-2">
+                    <button type="submit"
+                            class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-sync-alt mr-2"></i>Update Tracking
                     </button>
                 </div>
-                <p id="locationError" class="text-red-500 text-sm mt-2 hidden">Location access denied or unavailable</p>
-            </div>
-            
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-gray-700 text-sm font-bold mb-2">Temperature (°C)</label>
-                    <input type="number" step="0.1" name="temperature" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
-                </div>
-                <div>
-                    <label class="block text-gray-700 text-sm font-bold mb-2">Humidity (%)</label>
-                    <input type="number" step="0.1" name="humidity" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
-                </div>
-            </div>
-            
-            <div class="mb-4 mt-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2">Transport Conditions</label>
-                <textarea name="transport_conditions" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" rows="3"></textarea>
-            </div>
-            
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2">Expected Delivery Date</label>
-                <input type="date" name="expected_delivery_date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
-            </div>
-            
-            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Update Tracking
-            </button>
-        </form>
-    </div>
+            </form>
+        </div>
 
+        <!-- Active Shipments -->
+        <div class="bg-white rounded-xl shadow-sm p-6">
+            <h2 class="text-2xl font-bold mb-6">Active Shipments</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for product in products %}
+                <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">{{ product.name }}</h3>
+                            <p class="text-sm text-gray-500">Batch: {{ product.batch_id }}</p>
+                        </div>
+                        <span class="px-2 py-1 text-xs rounded-full 
+                                   {{ 'bg-yellow-100 text-yellow-800' if product.status == 'In Transit' 
+                                   else 'bg-green-100 text-green-800' if product.status == 'Delivered'
+                                   else 'bg-blue-100 text-blue-800' }}">
+                            {{ product.status|default('Pending', true) }}
+                        </span>
+                    </div>
+
+                    <div class="space-y-2 text-sm text-gray-600">
+                        <p><i class="fas fa-map-marker-alt mr-2"></i>Current Location: {{ product.current_location|default('Not Available') }}</p>
+                        <p><i class="fas fa-temperature-half mr-2"></i>Temperature: {{ product.temperature|default('N/A') }}°C</p>
+                        <p><i class="fas fa-droplet mr-2"></i>Humidity: {{ product.humidity|default('N/A') }}%</p>
+                    </div>
+
+                    <div class="mt-4 flex justify-center">
+                        <a href="{{ url_for('track_product', batch_id=product.batch_id) }}" 
+                           class="text-blue-600 hover:text-blue-800 text-sm">
+                            <i class="fas fa-external-link-alt mr-1"></i>View Details
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Geolocation JavaScript -->
     <script>
-        document.getElementById('geolocateBtn').addEventListener('click', function() {
-            const locationInput = document.getElementById('currentLocation');
+        document.addEventListener('DOMContentLoaded', function() {
+            const geolocateBtn = document.getElementById('geolocateBtn');
+            const currentLocationInput = document.getElementById('currentLocation');
             const locationError = document.getElementById('locationError');
 
-            // Check if geolocation is supported
-            if ('geolocation' in navigator) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    // Use Reverse Geocoding API to get readable location
-                    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.display_name) {
-                                locationInput.value = data.display_name;
-                            } else {
-                                locationInput.value = `${position.coords.latitude}, ${position.coords.longitude}`;
+            geolocateBtn.addEventListener('click', function() {
+                if (navigator.geolocation) {
+                    geolocateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    geolocateBtn.disabled = true;
+                    
+                    navigator.geolocation.getCurrentPosition(
+                        function(position) {
+                            const lat = position.coords.latitude;
+                            const lng = position.coords.longitude;
+                            
+                            // Use reverse geocoding to get address (you can use any geocoding service)
+                            fetch(`https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=YOUR_API_KEY`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.results && data.results.length > 0) {
+                                        currentLocationInput.value = data.results[0].formatted;
+                                    } else {
+                                        currentLocationInput.value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+                                    }
+                                })
+                                .catch(() => {
+                                    currentLocationInput.value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+                                })
+                                .finally(() => {
+                                    geolocateBtn.innerHTML = '<i class="fas fa-location-dot"></i>';
+                                    geolocateBtn.disabled = false;
+                                    locationError.classList.add('hidden');
+                                });
+                        },
+                        function(error) {
+                            let errorMessage = 'Unable to get location. ';
+                            switch(error.code) {
+                                case error.PERMISSION_DENIED:
+                                    errorMessage += 'Location access denied.';
+                                    break;
+                                case error.POSITION_UNAVAILABLE:
+                                    errorMessage += 'Location unavailable.';
+                                    break;
+                                case error.TIMEOUT:
+                                    errorMessage += 'Location request timed out.';
+                                    break;
                             }
-                            locationError.classList.add('hidden');
-                        })
-                        .catch(error => {
-                            // Fallback to coordinates if reverse geocoding fails
-                            locationInput.value = `${position.coords.latitude}, ${position.coords.longitude}`;
-                            locationError.classList.add('hidden');
-                        });
-                }, function(error) {
-                    // Handle location access errors
-                    locationError.textContent = 'Location access denied or unavailable';
+                            locationError.textContent = errorMessage;
+                            locationError.classList.remove('hidden');
+                            geolocateBtn.innerHTML = '<i class="fas fa-location-dot"></i>';
+                            geolocateBtn.disabled = false;
+                        }
+                    );
+                } else {
+                    locationError.textContent = 'Geolocation is not supported by this browser.';
                     locationError.classList.remove('hidden');
-                });
-            } else {
-                // Geolocation not supported
-                locationError.textContent = 'Geolocation is not supported by your browser';
-                locationError.classList.remove('hidden');
-            }
+                }
+            });
         });
     </script>
+    
+    <!-- Include marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Include DOMPurify for HTML sanitization -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.4.0/purify.min.js"></script>
+
+    <!-- Chat Widget -->
+    <div id="chat-widget" class="fixed bottom-4 right-4 z-50">
+        <!-- Chat Button -->
+        <button id="chat-button" 
+                class="bg-blue-600 text-white rounded-full p-4 shadow-lg hover:bg-blue-700 transition-colors">
+            <i class="fas fa-comments text-2xl"></i>
+        </button>
+        <!-- Chat Window -->
+        <div id="chat-window" class="hidden bg-white rounded-lg shadow-xl w-[360px] h-[500px] absolute bottom-16 right-0 overflow-hidden resize-container">
+            <!-- Resize Handle -->
+            <div id="resize-handle" class="absolute bottom-0 right-0 w-4 h-4 bg-gray-300 cursor-se-resize rounded-br-lg"></div>
+            <!-- Chat Header -->
+            <div class="bg-blue-600 text-white p-4 rounded-t-lg flex justify-between items-center">
+                <h3 class="font-semibold">Support Assistant</h3>
+                <button id="close-chat" class="text-white hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <!-- Chat Messages -->
+            <div id="chat-messages" class="p-4 h-[calc(100%-120px)] overflow-y-auto">
+                <div class="mb-4">
+                    <div class="bg-gray-100 rounded-lg p-3 inline-block">
+                        Hello! How can I help you with tracking and managing pharmaceutical shipments today?
+                    </div>
+                </div>
+            </div>
+            <!-- Chat Input -->
+            <div class="p-4 border-t">
+                <form id="chat-form" class="flex gap-2">
+                    <input type="text" 
+                        id="chat-input"
+                        placeholder="Type your message..." 
+                        class="flex-1 rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500">
+                    <button type="submit" 
+                            class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center">
+                        <i class="fas fa-paper-plane" id="send-icon"></i>
+                        <i class="fas fa-spinner fa-spin hidden" id="loading-icon"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Widget JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatButton = document.getElementById('chat-button');
+            const chatWindow = document.getElementById('chat-window');
+            const closeChat = document.getElementById('close-chat');
+            const chatForm = document.getElementById('chat-form');
+            const chatInput = document.getElementById('chat-input');
+            const chatMessages = document.getElementById('chat-messages');
+            const sendIcon = document.getElementById('send-icon');
+            const loadingIcon = document.getElementById('loading-icon');
+            const resizeHandle = document.getElementById('resize-handle');
+
+            // Toggle chat window
+            chatButton.addEventListener('click', () => {
+                chatWindow.classList.toggle('hidden');
+            });
+
+            closeChat.addEventListener('click', () => {
+                chatWindow.classList.add('hidden');
+            });
+
+            // Handle chat form submission
+            chatForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const message = chatInput.value.trim();
+                if (!message) return;
+
+                // Show loading state
+                sendIcon.classList.add('hidden');
+                loadingIcon.classList.remove('hidden');
+
+                // Add user message to chat
+                appendMessage(message, 'user');
+                chatInput.value = '';
+
+                try {
+                    // Send message to API
+                    const response = await fetch('http://localhost:8081/run_langflow', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            input_value: message
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    // Add AI response to chat
+                    appendMessage(data.result, 'ai');
+                } catch (error) {
+                    console.error('Error:', error);
+                    appendMessage('Sorry, I encountered an error. Please try again.', 'ai');
+                } finally {
+                    // Hide loading state
+                    sendIcon.classList.remove('hidden');
+                    loadingIcon.classList.add('hidden');
+                }
+            });
+
+            // Helper function to append messages to the chat
+            function appendMessage(message, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'mb-4 ' + (sender === 'user' ? 'text-right' : '');
+
+                const messageContent = document.createElement('div');
+                messageContent.className = sender === 'user' 
+                    ? 'bg-blue-600 text-white rounded-lg p-3 inline-block'
+                    : 'bg-gray-100 rounded-lg p-3 inline-block';
+
+                // Render Markdown as HTML
+                if (sender === 'ai') {
+                    const markdownHTML = marked.parse(message); // Convert Markdown to HTML
+                    const cleanHTML = DOMPurify.sanitize(markdownHTML); // Sanitize HTML for security
+                    messageContent.innerHTML = cleanHTML; // Set sanitized HTML
+                } else {
+                    messageContent.textContent = message; // Plain text for user messages
+                }
+
+                messageDiv.appendChild(messageContent);
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // Make the chat widget resizable
+            let isResizing = false;
+
+            resizeHandle.addEventListener('mousedown', (e) => {
+                isResizing = true;
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isResizing) return;
+
+                // Update the width and height of the chat window
+                const rect = chatWindow.getBoundingClientRect();
+                const newWidth = Math.max(e.clientX - rect.left, 300); // Minimum width: 300px
+                const newHeight = Math.max(e.clientY - rect.top, 400); // Minimum height: 400px
+
+                chatWindow.style.width = `${newWidth}px`;
+                chatWindow.style.height = `${newHeight}px`;
+
+                // Adjust the chat messages container height
+                chatMessages.style.height = `calc(${newHeight}px - 120px)`;
+            });
+
+            document.addEventListener('mouseup', () => {
+                isResizing = false;
+            });
+        });
+    </script>
+
+    <!-- Chat Widget Styles -->
+    <style>
+        /* Base styles */
+        #chat-widget {
+            font-family: Arial, sans-serif;
+        }
+
+        #chat-window {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        #chat-window.hidden {
+            display: none;
+        }
+
+        /* Resize handle */
+        #resize-handle {
+            z-index: 10;
+        }
+
+        /* Scrollbar styling */
+        #chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #chat-messages::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+
+        #chat-messages::-webkit-scrollbar-track {
+            background: #f9f9f9;
+        }
+    </style>
 </body>
 </html>
-

@@ -7,111 +7,280 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100">
-    <div class="container mx-auto px-4 py-8">
-        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-            <div class="bg-blue-600 text-white p-6">
-                <h1 class="text-3xl font-bold">Product Tracking Details</h1>
-                <p class="text-blue-200">Batch ID: {{ product.batch_id }}</p>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-6 p-6">
-                <div>
-                    <h2 class="text-2xl font-semibold mb-4 text-gray-800">Product Information</h2>
-                    <div class="space-y-3 bg-gray-50 p-4 rounded-lg">
-                        <div class="flex justify-between border-b pb-2">
-                            <span class="font-medium">Product Name:</span>
-                            <span>{{ product.name }}</span>
-                        </div>
-                        <div class="flex justify-between border-b pb-2">
-                            <span class="font-medium">Product ID:</span>
-                            <span>{{ product.product_id }}</span>
-                        </div>
-                        <div class="flex justify-between border-b pb-2">
-                            <span class="font-medium">Medicine Type:</span>
-                            <span>{{ product.medicine_type }}</span>
-                        </div>
-                        <div class="flex justify-between border-b pb-2">
-                            <span class="font-medium">Medicine Form:</span>
-                            <span>{{ product.medicine_form }}</span>
-                        </div>
-                        <div class="flex justify-between border-b pb-2">
-                            <span class="font-medium">Manufacturing Date:</span>
-                            <span>{{ product.manufacturing_date }}</span>
-                        </div>
-                        <div class="flex justify-between border-b pb-2">
-                            <span class="font-medium">Expiration Date:</span>
-                            <span>{{ product.expiration_date }}</span>
-                        </div>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-6 sm:py-10 max-w-7xl">
+        <!-- Main Card -->
+        <div class="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-100">
+            <!-- Header Section with Hero Design -->
+            <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6 sm:p-8 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500 rounded-full transform translate-x-32 -translate-y-32 opacity-20"></div>
+                <div class="absolute bottom-0 left-0 w-48 h-48 bg-blue-500 rounded-full transform -translate-x-24 translate-y-24 opacity-10"></div>
+                <div class="relative">
+                    <h1 class="text-3xl sm:text-4xl font-bold mb-2">Product Tracking Details</h1>
+                    <div class="flex items-center space-x-2 text-blue-100">
+                        <i class="fas fa-barcode"></i>
+                        <p class="text-sm sm:text-base">Batch ID: {{ product.batch_id }}</p>
                     </div>
                 </div>
+            </div>
 
-                <div>
-                    <h2 class="text-2xl font-semibold mb-4 text-gray-800">Additional Details</h2>
-                    <div class="space-y-3 bg-gray-50 p-4 rounded-lg">
-                        <div>
-                            <h3 class="font-medium text-lg mb-2">Description</h3>
-                            <p class="text-gray-700">{{ product.description or 'No description available' }}</p>
+            <!-- Quick Status Overview -->
+            <div class="bg-gray-50 p-4 sm:p-6 border-b border-gray-100">
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div class="bg-white p-4 rounded-xl shadow-sm">
+                        <div class="text-sm text-gray-500 mb-1">Status</div>
+                        <div class="font-semibold text-green-600">
+                            <i class="fas fa-check-circle mr-1"></i> Verified
                         </div>
-                        <div>
-                            <h3 class="font-medium text-lg mb-2">Dosage</h3>
-                            <p class="text-gray-700">{{ product.dosage or 'Not specified' }}</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm">
+                        <div class="text-sm text-gray-500 mb-1">Temperature</div>
+                        <div class="font-semibold text-blue-600">
+                            <i class="fas fa-temperature-low mr-1"></i> Optimal
                         </div>
-                        <div>
-                            <h3 class="font-medium text-lg mb-2">Potential Side Effects</h3>
-                            <p class="text-gray-700">{{ product.side_effects or 'No known side effects' }}</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm">
+                        <div class="text-sm text-gray-500 mb-1">Location</div>
+                        <div class="font-semibold text-purple-600">
+                            <i class="fas fa-map-marker-alt mr-1"></i> In Transit
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm">
+                        <div class="text-sm text-gray-500 mb-1">Last Updated</div>
+                        <div class="font-semibold text-gray-700">
+                            <i class="far fa-clock mr-1"></i> 2h ago
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="p-6 bg-gray-100">
-                <h2 class="text-2xl font-semibold mb-4 text-gray-800">Tracking History</h2>
+            <!-- Main Content -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
+                <!-- Product Information -->
+                <div class="space-y-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="bg-gray-50 px-4 py-3 border-b border-gray-100">
+                            <h2 class="text-lg font-semibold text-gray-800">
+                                <i class="fas fa-info-circle mr-2 text-blue-500"></i>Product Information
+                            </h2>
+                        </div>
+                        <div class="p-4 space-y-3">
+                            <div class="flex justify-between items-center py-2 border-b border-gray-50">
+                                <span class="text-gray-600">Product Name</span>
+                                <span class="font-medium text-gray-800">{{ product.name }}</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-gray-50">
+                                <span class="text-gray-600">Product ID</span>
+                                <span class="font-medium text-gray-800">{{ product.product_id }}</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-gray-50">
+                                <span class="text-gray-600">Medicine Type</span>
+                                <span class="font-medium text-gray-800">{{ product.medicine_type }}</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-gray-50">
+                                <span class="text-gray-600">Medicine Form</span>
+                                <span class="font-medium text-gray-800">{{ product.medicine_form }}</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-gray-50">
+                                <span class="text-gray-600">Manufacturing Date</span>
+                                <span class="font-medium text-gray-800">{{ product.manufacturing_date }}</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2">
+                                <span class="text-gray-600">Expiration Date</span>
+                                <span class="font-medium text-gray-800">{{ product.expiration_date }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Details -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="bg-gray-50 px-4 py-3 border-b border-gray-100">
+                            <h2 class="text-lg font-semibold text-gray-800">
+                                <i class="fas fa-clipboard-list mr-2 text-purple-500"></i>Additional Details
+                            </h2>
+                        </div>
+                        <div class="p-4 space-y-4">
+                            <div>
+                                <h3 class="font-medium text-gray-700 mb-2">Description</h3>
+                                <p class="text-gray-600">{{ product.description or 'No description available' }}</p>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-gray-700 mb-2">Dosage</h3>
+                                <p class="text-gray-600">{{ product.dosage or 'Not specified' }}</p>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-gray-700 mb-2">Potential Side Effects</h3>
+                                <p class="text-gray-600">{{ product.side_effects or 'No known side effects' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tracking History -->
                 <div class="space-y-4">
-                    {% if history %}
-                        {% for entry in history %}
-                        <div class="bg-white p-4 rounded-lg shadow-md">
-                            <div class="flex justify-between items-center">
-                                <span class="font-medium text-blue-600">{{ entry.status }}</span>
-                                <span class="text-sm text-gray-500">
-                                    <i class="far fa-clock mr-2"></i>
-                                    {{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
-                                </span>
-                            </div>
-                            <div class="mt-2 text-sm text-gray-600">
-                                Updated by: {{ entry.updated_by }}
-                            </div>
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="bg-gray-50 px-4 py-3 border-b border-gray-100">
+                            <h2 class="text-lg font-semibold text-gray-800">
+                                <i class="fas fa-route mr-2 text-green-500"></i>Tracking History
+                            </h2>
                         </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="bg-white p-4 rounded-lg shadow-md text-center text-gray-500">
-                            No tracking history available
+                        <div class="p-4">
+                            {% if history %}
+                                <div class="space-y-4">
+                                    {% for entry in history|sort(attribute='timestamp') %}
+                                        <div class="relative pl-8 pb-4 border-l-2 border-blue-200 last:border-l-0">
+                                            <div class="absolute left-0 top-0 w-4 h-4 -translate-x-[9px] rounded-full bg-blue-500"></div>
+                                            <div class="bg-gray-50 rounded-lg p-4">
+                                                <div class="flex justify-between items-start mb-2">
+                                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm
+                                                        {% if entry.status == 'Delivered' %}bg-green-100 text-green-800
+                                                        {% elif entry.status == 'In Transit' %}bg-blue-100 text-blue-800
+                                                        {% else %}bg-gray-100 text-gray-800
+                                                        {% endif %}">
+                                                        {{ entry.status }}
+                                                    </span>
+                                                    <span class="text-sm text-gray-500">
+                                                        <i class="far fa-clock mr-1"></i>
+                                                        {{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
+                                                    </span>
+                                                </div>
+                                                
+                                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
+                                                    <div>
+                                                        <div class="mb-2">
+                                                            <span class="text-gray-600 text-sm">Location:</span>
+                                                            <span class="block font-medium text-gray-800">
+                                                                {{ entry.current_location or 'Not specified' }}
+                                                            </span>
+                                                        </div>
+                                                        {% if entry.carrier %}
+                                                        <div class="mb-2">
+                                                            <span class="text-gray-600 text-sm">Carrier:</span>
+                                                            <span class="block font-medium text-gray-800">
+                                                                {{ entry.carrier }}
+                                                            </span>
+                                                        </div>
+                                                        {% endif %}
+                                                    </div>
+                                                    
+                                                    <div>
+                                                        {% if entry.temperature is not none %}
+                                                        <div class="mb-2">
+                                                            <span class="text-gray-600 text-sm">Temperature:</span>
+                                                            <span class="block">
+                                                                <span class="font-medium text-gray-800">{{ entry.temperature }}°C</span>
+                                                                <span class="text-xs ml-1 
+                                                                    {% if entry.temperature < 2 or entry.temperature > 8 %}
+                                                                    text-red-500
+                                                                    {% else %}
+                                                                    text-green-500
+                                                                    {% endif %}">
+                                                                    {% if entry.temperature < 2 or entry.temperature > 8 %}
+                                                                    (Outside Range)
+                                                                    {% else %}
+                                                                    (Safe Range)
+                                                                    {% endif %}
+                                                                </span>
+                                                            </span>
+                                                        </div>
+                                                        {% endif %}
+                                                        
+                                                        {% if entry.humidity is not none %}
+                                                        <div class="mb-2">
+                                                            <span class="text-gray-600 text-sm">Humidity:</span>
+                                                            <span class="block">
+                                                                <span class="font-medium text-gray-800">{{ entry.humidity }}%</span>
+                                                                <span class="text-xs ml-1
+                                                                    {% if entry.humidity < 30 or entry.humidity > 70 %}
+                                                                    text-red-500
+                                                                    {% else %}
+                                                                    text-green-500
+                                                                    {% endif %}">
+                                                                    {% if entry.humidity < 30 or entry.humidity > 70 %}
+                                                                    (Risk)
+                                                                    {% else %}
+                                                                    (Optimal)
+                                                                    {% endif %}
+                                                                </span>
+                                                            </span>
+                                                        </div>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+
+                                                {% if entry.notes %}
+                                                <div class="mt-3 text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
+                                                    <strong>Notes:</strong> {{ entry.notes }}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="text-center text-gray-500 py-8">
+                                    <i class="fas fa-inbox text-4xl mb-3 block"></i>
+                                    <p>No tracking history available</p>
+                                </div>
+                            {% endif %}
                         </div>
-                    {% endif %}
+                    </div>
                 </div>
             </div>
 
-            <div class="p-6 bg-white border-t">
-                <div class="grid md:grid-cols-2 gap-4">
-                    <div>
-                        <h3 class="font-semibold mb-2">Manufacturer Details</h3>
-                        <p>Name: {{ manufacturer.username }}</p>
-                        <p>Email: {{ manufacturer.email }}</p>
+            <!-- Contact Information -->
+            <div class="border-t border-gray-100">
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-industry text-blue-500 text-xl mr-3"></i>
+                                <h3 class="text-lg font-semibold text-gray-800">Manufacturer Details</h3>
+                            </div>
+                            <div class="space-y-2">
+                                <p class="flex justify-between">
+                                    <span class="text-gray-600">Name:</span>
+                                    <span class="font-medium text-gray-800">{{ manufacturer.username }}</span>
+                                </p>
+                                <p class="flex justify-between">
+                                    <span class="text-gray-600">Email:</span>
+                                    <span class="font-medium text-gray-800">{{ manufacturer.email }}</span>
+                                </p>
+                            </div>
+                        </div>
+                        
+                        {% if distributor %}
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-truck text-green-500 text-xl mr-3"></i>
+                                <h3 class="text-lg font-semibold text-gray-800">Distributor Details</h3>
+                            </div>
+                            <div class="space-y-2">
+                                <p class="flex justify-between">
+                                    <span class="text-gray-600">Name:</span>
+                                    <span class="font-medium text-gray-800">{{ distributor.username }}</span>
+                                </p>
+                                <p class="flex justify-between">
+                                    <span class="text-gray-600">Email:</span>
+                                    <span class="font-medium text-gray-800">{{ distributor.email }}</span>
+                                </p>
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
-                    {% if distributor %}
-                    <div>
-                        <h3 class="font-semibold mb-2">Distributor Details</h3>
-                        <p>Name: {{ distributor.username }}</p>
-                        <p>Email: {{ distributor.email }}</p>
-                    </div>
-                    {% endif %}
                 </div>
             </div>
 
-            <div class="p-6 bg-gray-50 text-center">
-                <img src="{{ url_for('static', filename='qr_codes/' ~ product.batch_id ~ '.png') }}" 
-                     alt="Product QR Code" class="mx-auto w-48 h-48 mb-4">
-                <p class="text-gray-600">Scan this QR code to verify product authenticity</p>
+            <!-- QR Code Section -->
+            <div class="bg-gray-50 p-6 text-center border-t border-gray-100">
+                <div class="max-w-[10rem] mx-auto bg-white p-3 rounded-xl shadow-sm">
+                    <img src="{{ url_for('static', filename='qr_codes/' ~ product.batch_id ~ '.png') }}" 
+                         alt="Product QR Code" class="w-full h-auto">
+                </div>
+                <p class="text-gray-600 text-sm mt-3">
+                    <i class="fas fa-qrcode mr-1"></i>
+                    Scan to verify product authenticity
+                </p>
             </div>
         </div>
     </div>
