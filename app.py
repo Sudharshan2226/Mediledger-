@@ -49,6 +49,7 @@ MEDICINE_FORMS = [
     'Sublingual medicines', 
     'Injections'
 ]
+# pylint: disable=too-few-public-methods
 
 # Database Models
 class User(db.Model, UserMixin):

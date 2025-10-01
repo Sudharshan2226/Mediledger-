@@ -321,11 +321,13 @@
 ### **📚 RESEARCH & REFERENCES**
 
 #### **🔬 Technology Research**
+
 - Blockchain in Healthcare: IBM Research Papers
 - QR Code Security: IEEE Digital Library
 - AI in Quality Control: Nature Scientific Reports
 
 #### **📖 Implementation Studies**
+
 - WHO Guidelines on Medicine Quality Monitoring
 - FDA Blockchain for Drug Traceability Framework
 - EU Pharmaceutical Supply Chain Regulations
