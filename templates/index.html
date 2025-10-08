@@ -1,70 +1,208 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medical Tracking System</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gradient-to-br from-blue-500 to-purple-600 min-h-screen">
-    <div class="container mx-auto px-4 h-screen flex items-center justify-center">
-        <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 w-full max-w-2xl shadow-2xl">
-            <div class="text-center mb-8">
-                <h1 class="text-4xl font-bold text-white mb-4 animate-fade-in">
-                    Medical Tracking System
+{% extends "base.html" %}
+
+{% block title %}MediLedger - Welcome{% endblock %}
+
+{% block head %}
+<style>
+    #particles-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+    }
+    .typewriter-container {
+        display: inline-block;
+        overflow: hidden;
+        white-space: nowrap;
+        border-right: .15em solid orange; /* The typwriter cursor */
+        animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+    }
+
+    /* The typing effect */
+    @keyframes typing {
+        from { width: 0 }
+        to { width: 100% }
+    }
+
+    /* The typewriter cursor effect */
+    @keyframes blink-caret {
+        from, to { border-color: transparent }
+        50% { border-color: orange; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="relative min-h-screen overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800">
+    <!-- Animated background particles -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Hero content with better typography -->
+    <div class="relative z-10 flex items-center justify-center min-h-screen">
+        <div class="text-center max-w-4xl mx-auto px-6">
+            <div class="mb-8">
+                <!-- Animated logo -->
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-white/10 rounded-full mb-6 animate-pulse-slow">
+                    <i class="fas fa-shield-virus text-3xl text-white"></i>
+                </div>
+
+                <!-- Enhanced typography with gradient text -->
+                <h1 class="text-6xl md:text-8xl font-black mb-6">
+                    <span class="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient">
+                        MediLedger
+                    </span>
                 </h1>
-                <p class="text-xl text-white/90 mb-8 animate-slide-up">
-                    Secure and efficient medical product management platform
+
+                <!-- Improved tagline with typewriter effect -->
+                <p class="text-xl md:text-2xl text-white/90 mb-8 typewriter">
+                    Blockchain-Secured Medicine Authentication
                 </p>
+
+                <!-- Statistics counter -->
+                <div class="grid grid-cols-3 gap-8 mb-12 max-w-2xl mx-auto">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-white counter" data-target="99.9">0</div>
+                        <div class="text-sm text-white/70">% Accuracy</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-white counter" data-target="1000000">0</div>
+                        <div class="text-sm text-white/70">Lives Protected</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-white counter" data-target="50">0</div>
+                        <div class="text-sm text-white/70">Countries</div>
+                    </div>
+                </div>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <a href="{{ url_for('login') }}" 
-                   class="group bg-white/20 hover:bg-white/30 transition-all duration-300 rounded-xl p-6 text-center">
-                    <div class="text-white text-4xl mb-4">👤</div>
-                    <h2 class="text-white text-xl font-semibold mb-2">Login</h2>
-                    <p class="text-white/80 text-sm">Access your dashboard</p>
+            <!-- CTA buttons with better design -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{{ url_for('register') }}" class="group relative overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full font-semibold text-lg shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-105">
+                    <span class="relative z-10">Start Protecting Now</span>
+                    <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </a>
                 
-                <a href="{{ url_for('register') }}" 
-                   class="group bg-white/20 hover:bg-white/30 transition-all duration-300 rounded-xl p-6 text-center">
-                    <div class="text-white text-4xl mb-4">✨</div>
-                    <h2 class="text-white text-xl font-semibold mb-2">Register</h2>
-                    <p class="text-white/80 text-sm">Create new account</p>
-                </a>
-                
-                <a href="{{ url_for('login') }}" 
-                   class="group bg-white/20 hover:bg-white/30 transition-all duration-300 rounded-xl p-6 text-center">
-                    <div class="text-white text-4xl mb-4">💊</div>
-                    <h2 class="text-white text-xl font-semibold mb-2">Quick Access</h2>
-                    <p class="text-white/80 text-sm">Prescription-less system</p>
+                <a href="{{ url_for('login') }}" class="group bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-full font-semibold text-lg border border-white/20 hover:bg-white/20 transition-all duration-300">
+                    <i class="fas fa-sign-in-alt mr-2"></i>
+                    Login
                 </a>
             </div>
-            
-            <footer class="mt-12 text-center text-white/60">
-                <p>&copy; 2025 Medical Tracking System. All rights reserved.</p>
-            </footer>
         </div>
     </div>
 
-    <style>
-        @keyframes fade-in {
-            from { opacity: 0; }
-            to { opacity: 1; }
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <i class="fas fa-chevron-down text-white/50 text-2xl"></i>
+    </div>
+</section>
+
+<script>
+    // Particle animation
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particles = [];
+    const particleCount = 100;
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2 + 1;
+            this.speedX = Math.random() * 2 - 1;
+            this.speedY = Math.random() * 2 - 1;
         }
-        
-        @keyframes slide-up {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+
+            if (this.size > 0.2) this.size -= 0.01;
         }
-        
-        .animate-fade-in {
-            animation: fade-in 1s ease-out;
+
+        draw() {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.fill();
         }
-        
-        .animate-slide-up {
-            animation: slide-up 1s ease-out;
+    }
+
+    function handleParticles() {
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
+
+            for (let j = i; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < 100) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+                    ctx.lineWidth = 0.2;
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.stroke();
+                }
+            }
+
+            if (particles[i].size <= 0.3) {
+                particles.splice(i, 1);
+                i--;
+            }
         }
-    </style>
-</body>
-</html>
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        handleParticles();
+        requestAnimationFrame(animate);
+    }
+
+    function init() {
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+        animate();
+    }
+    init();
+
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        particles = [];
+        init();
+    });
+
+    // Counter animation
+    const counters = document.querySelectorAll('.counter');
+    const speed = 200;
+
+    counters.forEach(counter => {
+        const updateCount = () => {
+            const target = +counter.getAttribute('data-target');
+            const count = +counter.innerText;
+
+            const inc = target / speed;
+
+            if (count < target) {
+                counter.innerText = Math.ceil(count + inc);
+                setTimeout(updateCount, 1);
+            } else {
+                counter.innerText = target;
+            }
+        };
+
+        updateCount();
+    });
+
+</script>
+{% endblock %}
