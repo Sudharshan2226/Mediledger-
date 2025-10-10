@@ -43,6 +43,99 @@
             background: #f8fafc;
             margin: 0 auto;
         }
+        .goog-te-banner-frame {
+            display: none !important;
+        }
+        
+        body {
+            top: 0 !important;
+        }
+        
+        .goog-te-gadget {
+            font-family: inherit !important;
+        }
+        
+        .goog-te-gadget-simple {
+            background-color: white !important;
+            border: 1px solid #d1d5db !important;
+            border-radius: 0.5rem !important;
+            padding: 0.5rem 0.75rem !important;
+            font-size: 0.875rem !important;
+            color: #374151 !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+            min-width: 120px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+        }
+        
+        .goog-te-gadget-simple:hover {
+            border-color: #3b82f6 !important;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        .goog-te-gadget-icon {
+            margin-right: 0.5rem !important;
+        }
+        
+        .goog-te-menu-value span {
+            color: #374151 !important;
+        }
+        
+        .goog-te-menu-value span:first-child {
+            display: none !important;
+        }
+        
+        .goog-te-menu2 {
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+            border-radius: 0.5rem !important;
+            border: 1px solid #e5e7eb !important;
+        }
+        
+        .goog-te-menu2-item div,
+        .goog-te-menu2-item:link div,
+        .goog-te-menu2-item:visited div,
+        .goog-te-menu2-item:active div {
+            color: #374151 !important;
+            font-family: inherit !important;
+            padding: 0.5rem 1rem !important;
+        }
+        
+        .goog-te-menu2-item:hover div {
+            background-color: #f3f4f6 !important;
+        }
+        
+        .goog-te-menu2-item-selected div {
+            background-color: #dbeafe !important;
+            color: #1e40af !important;
+        }
+        
+        .translate-widget {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .translate-icon {
+            color: #6b7280;
+            font-size: 1.25rem;
+        }
+
+        .qr-code-placeholder {
+            width: 100%;
+            height: 160px;
+            background: linear-gradient(45deg, #f3f4f6 25%, transparent 25%, transparent 75%, #f3f4f6 75%, #f3f4f6),
+                        linear-gradient(45deg, #f3f4f6 25%, transparent 25%, transparent 75%, #f3f4f6 75%, #f3f4f6);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -62,6 +155,10 @@
                 </div>
                 <div class="flex items-center space-x-4">
                     <span class="text-gray-600">Demo: Consumer Verification</span>
+                    <div class="translate-widget">
+                        <i class="fas fa-globe translate-icon"></i>
+                        <div id="google_translate_element_consumer"></div>
+                    </div>
                     <a href="index.html" class="text-blue-600 hover:text-blue-800">← Back to Home</a>
                 </div>
             </div>
@@ -91,168 +188,401 @@
 
         <!-- Verification Result (Initially Hidden) -->
         <div id="verificationResult" class="hidden">
-            <!-- Product Information -->
-            <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
-                <div class="flex items-start space-x-4">
-                    <div class="flex-shrink-0">
-                        <div class="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-check-circle text-green-600 text-2xl"></i>
+            <!-- Main Card -->
+            <div class="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-100">
+                <!-- Header Section with Hero Design -->
+                <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6 sm:p-8 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500 rounded-full transform translate-x-32 -translate-y-32 opacity-20"></div>
+                    <div class="absolute bottom-0 left-0 w-48 h-48 bg-blue-500 rounded-full transform -translate-x-24 translate-y-24 opacity-10"></div>
+                    <div class="relative">
+                        <h1 class="text-3xl sm:text-4xl font-bold mb-2">Product Tracking Details</h1>
+                        <div class="flex items-center space-x-2 text-blue-100">
+                            <i class="fas fa-barcode"></i>
+                            <p class="text-sm sm:text-base">Batch ID: DOLO650-2024-OCT-001</p>
                         </div>
                     </div>
-                    <div class="flex-1">
-                        <h3 class="text-xl font-bold text-gray-800 mb-2">✓ Authentic Product Verified</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <h4 class="font-semibold text-gray-700 mb-2">Product Details</h4>
-                                <div class="space-y-2 text-sm">
-                                    <div><span class="font-medium">Name:</span> Paracetamol 500mg</div>
-                                    <div><span class="font-medium">Batch ID:</span> PCM-500-001</div>
-                                    <div><span class="font-medium">Manufacturing Date:</span> 2024-09-01</div>
-                                    <div><span class="font-medium">Expiry Date:</span> 2027-09-01</div>
-                                    <div><span class="font-medium">Dosage:</span> 500mg tablets</div>
+                </div>
+
+                <!-- Quick Status Overview -->
+                <div class="bg-gray-50 p-4 sm:p-6 border-b border-gray-100">
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        <div class="bg-white p-4 rounded-xl shadow-sm">
+                            <div class="text-sm text-gray-500 mb-1">Status</div>
+                            <div class="font-semibold text-green-600">
+                                <i class="fas fa-check-circle mr-1"></i> Delivered
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl shadow-sm">
+                            <div class="text-sm text-gray-500 mb-1">Temperature</div>
+                            <div class="font-semibold text-blue-600">
+                                <i class="fas fa-temperature-low mr-1"></i> Optimal
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl shadow-sm">
+                            <div class="text-sm text-gray-500 mb-1">Location</div>
+                            <div class="font-semibold text-purple-600">
+                                <i class="fas fa-map-marker-alt mr-1"></i> Parker Pharmacy
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl shadow-sm">
+                            <div class="text-sm text-gray-500 mb-1">Last Updated</div>
+                            <div class="font-semibold text-gray-700">
+                                <i class="far fa-clock mr-1"></i> 2h ago
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
+                    <!-- Product Information -->
+                    <div class="space-y-6">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                            <div class="bg-gray-50 px-4 py-3 border-b border-gray-100">
+                                <h2 class="text-lg font-semibold text-gray-800">
+                                    <i class="fas fa-info-circle mr-2 text-blue-500"></i>Product Information
+                                </h2>
+                            </div>
+                            <div class="p-4 space-y-3">
+                                <div class="flex justify-between items-center py-2 border-b border-gray-50">
+                                    <span class="text-gray-600">Product Name</span>
+                                    <span class="font-medium text-gray-800">Dolo 650</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2 border-b border-gray-50">
+                                    <span class="text-gray-600">Product ID</span>
+                                    <span class="font-medium text-gray-800">PARA-650-MG-2024</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2 border-b border-gray-50">
+                                    <span class="text-gray-600">Medicine Type</span>
+                                    <span class="font-medium text-gray-800">Analgesic & Antipyretic</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2 border-b border-gray-50">
+                                    <span class="text-gray-600">Medicine Form</span>
+                                    <span class="font-medium text-gray-800">Tablet</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2 border-b border-gray-50">
+                                    <span class="text-gray-600">Manufacturing Date</span>
+                                    <span class="font-medium text-gray-800">2024-09-15</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2">
+                                    <span class="text-gray-600">Expiration Date</span>
+                                    <span class="font-medium text-gray-800">2027-09-14</span>
                                 </div>
                             </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-700 mb-2">Manufacturer Details</h4>
-                                <div class="space-y-2 text-sm">
-                                    <div><span class="font-medium">Company:</span> PharmaCorp Ltd</div>
-                                    <div><span class="font-medium">License:</span> MFG-2024-PC-001</div>
-                                    <div><span class="font-medium">Quality Certified:</span> ✓ ISO 9001:2015</div>
-                                    <div><span class="font-medium">GMP Certified:</span> ✓ WHO-GMP</div>
-                                    <div><span class="font-medium">Location:</span> Mumbai, India</div>
+                        </div>
+
+                        <!-- Additional Details -->
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                            <div class="bg-gray-50 px-4 py-3 border-b border-gray-100">
+                                <h2 class="text-lg font-semibold text-gray-800">
+                                    <i class="fas fa-clipboard-list mr-2 text-purple-500"></i>Additional Details
+                                </h2>
+                            </div>
+                            <div class="p-4 space-y-4">
+                                <div>
+                                    <h3 class="font-medium text-gray-700 mb-2">Description</h3>
+                                    <p class="text-gray-600">Paracetamol 650mg tablet for relief from fever and mild to moderate pain. Each tablet contains 650mg of paracetamol as the active ingredient.</p>
+                                </div>
+                                <div>
+                                    <h3 class="font-medium text-gray-700 mb-2">Dosage</h3>
+                                    <p class="text-gray-600">Adults and children over 12 years: 1-2 tablets every 4-6 hours. Maximum 4 tablets in 24 hours. Take with water after meals.</p>
+                                </div>
+                                <div>
+                                    <h3 class="font-medium text-gray-700 mb-2">Potential Side Effects</h3>
+                                    <p class="text-gray-600">Rare: Allergic reactions, skin rash, nausea. Overdose may cause liver damage. Consult doctor if symptoms persist.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tracking History -->
+                    <div class="space-y-4">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                            <div class="bg-gray-50 px-4 py-3 border-b border-gray-100">
+                                <h2 class="text-lg font-semibold text-gray-800">
+                                    <i class="fas fa-route mr-2 text-green-500"></i>Tracking History
+                                </h2>
+                            </div>
+                            <div class="p-4">
+                                <div class="space-y-4">
+                                    <!-- Event 1: Manufacturing -->
+                                    <div class="relative pl-8 pb-4 border-l-2 border-blue-200">
+                                        <div class="absolute left-0 top-0 w-4 h-4 -translate-x-[9px] rounded-full bg-blue-500"></div>
+                                        <div class="bg-gray-50 rounded-lg p-4">
+                                            <div class="flex justify-between items-start mb-2">
+                                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-800">
+                                                    Manufactured
+                                                </span>
+                                                <span class="text-sm text-gray-500">
+                                                    <i class="far fa-clock mr-1"></i>
+                                                    2024-09-15 08:30:00
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
+                                                <div>
+                                                    <div class="mb-2">
+                                                        <div class="text-xs text-gray-500">Location</div>
+                                                        <div class="font-medium text-gray-700">Wick Manufacturing</div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div>
+                                                    <div class="mb-2">
+                                                        <div class="text-xs text-gray-500">Temperature</div>
+                                                        <div class="font-medium text-gray-700">22°C</div>
+                                                    </div>
+                                                    <div class="mb-2">
+                                                        <div class="text-xs text-gray-500">Humidity</div>
+                                                        <div class="font-medium text-gray-700">45%</div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="text-xs text-gray-500">Custodian</div>
+                                                        <div class="font-medium text-gray-700">John Wick</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="mt-3 text-sm text-gray-600 bg-white p-3 rounded-lg">
+                                                <strong>Notes:</strong> Batch manufactured and quality checked. All parameters within acceptable limits.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Event 2: Warehouse Storage -->
+                                    <div class="relative pl-8 pb-4 border-l-2 border-blue-200">
+                                        <div class="absolute left-0 top-0 w-4 h-4 -translate-x-[9px] rounded-full bg-blue-500"></div>
+                                        <div class="bg-gray-50 rounded-lg p-4">
+                                            <div class="flex justify-between items-start mb-2">
+                                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-800">
+                                                    Warehouse
+                                                </span>
+                                                <span class="text-sm text-gray-500">
+                                                    <i class="far fa-clock mr-1"></i>
+                                                    2024-09-16 14:00:00
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
+                                                <div>
+                                                    <div class="mb-2">
+                                                        <div class="text-xs text-gray-500">Location</div>
+                                                        <div class="font-medium text-gray-700">Sparrow Distribution</div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div>
+                                                    <div class="mb-2">
+                                                        <div class="text-xs text-gray-500">Temperature</div>
+                                                        <div class="font-medium text-gray-700">20°C</div>
+                                                    </div>
+                                                    <div class="mb-2">
+                                                        <div class="text-xs text-gray-500">Humidity</div>
+                                                        <div class="font-medium text-gray-700">50%</div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="text-xs text-gray-500">Custodian</div>
+                                                        <div class="font-medium text-gray-700">Jack Sparrow</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="mt-3 text-sm text-gray-600 bg-white p-3 rounded-lg">
+                                                <strong>Notes:</strong> Stored in climate-controlled warehouse. Ready for distribution.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Event 3: In Transit (With Alert) -->
+                                    <div class="relative pl-8 pb-4 border-l-2 border-blue-200">
+                                        <div class="absolute left-0 top-0 w-4 h-4 -translate-x-[9px] rounded-full bg-blue-500"></div>
+                                        <div class="bg-gray-50 rounded-lg p-4">
+                                            <div class="flex justify-between items-start mb-2">
+                                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
+                                                    In Transit
+                                                </span>
+                                                <span class="text-sm text-gray-500">
+                                                    <i class="far fa-clock mr-1"></i>
+                                                    2024-09-17 10:00:00
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
+                                                <div>
+                                                    <div class="mb-2">
+                                                        <div class="text-xs text-gray-500">From</div>
+                                                        <div class="font-medium text-gray-700">Sparrow Distribution</div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="text-xs text-gray-500">To</div>
+                                                        <div class="font-medium text-gray-700">Parker Pharmacy</div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div>
+                                                    <div class="mb-2">
+                                                        <div class="text-xs text-gray-500">Temperature</div>
+                                                        <div class="font-medium text-gray-700">25°C <span class="text-red-500">(Alert)</span></div>
+                                                    </div>
+                                                    <div class="mb-2">
+                                                        <div class="text-xs text-gray-500">Humidity</div>
+                                                        <div class="font-medium text-gray-700">55%</div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="text-xs text-gray-500">Custodian</div>
+                                                        <div class="font-medium text-gray-700">Jack Sparrow</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="mt-3 text-sm text-gray-600 bg-white p-3 rounded-lg border-l-4 border-red-500">
+                                                <strong>Alert:</strong> Temperature spike detected during transit. Vehicle AC temporarily malfunctioned. Issue resolved within 30 minutes. Product integrity maintained.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Event 4: Distribution Center -->
+                                    <div class="relative pl-8 pb-4 border-l-2 border-blue-200">
+                                        <div class="absolute left-0 top-0 w-4 h-4 -translate-x-[9px] rounded-full bg-blue-500"></div>
+                                        <div class="bg-gray-50 rounded-lg p-4">
+                                            <div class="flex justify-between items-start mb-2">
+                                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-800">
+                                                    Distribution Center
+                                                </span>
+                                                <span class="text-sm text-gray-500">
+                                                    <i class="far fa-clock mr-1"></i>
+                                                    2024-09-17 18:00:00
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
+                                                <div>
+                                                    <div class="mb-2">
+                                                        <div class="text-xs text-gray-500">Location</div>
+                                                        <div class="font-medium text-gray-700">Parker Pharmacy</div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div>
+                                                    <div class="mb-2">
+                                                        <div class="text-xs text-gray-500">Temperature</div>
+                                                        <div class="font-medium text-gray-700">21°C</div>
+                                                    </div>
+                                                    <div class="mb-2">
+                                                        <div class="text-xs text-gray-500">Humidity</div>
+                                                        <div class="font-medium text-gray-700">48%</div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="text-xs text-gray-500">Custodian</div>
+                                                        <div class="font-medium text-gray-700">Peter Parker</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="mt-3 text-sm text-gray-600 bg-white p-3 rounded-lg">
+                                                <strong>Notes:</strong> Package received and inspected. Preparing for final delivery to pharmacy.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Event 5: Delivered -->
+                                    <div class="relative pl-8 pb-4">
+                                        <div class="absolute left-0 top-0 w-4 h-4 -translate-x-[9px] rounded-full bg-green-500"></div>
+                                        <div class="bg-gray-50 rounded-lg p-4">
+                                            <div class="flex justify-between items-start mb-2">
+                                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-green-100 text-green-800">
+                                                    Delivered
+                                                </span>
+                                                <span class="text-sm text-gray-500">
+                                                    <i class="far fa-clock mr-1"></i>
+                                                    2024-09-18 09:00:00
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
+                                                <div>
+                                                    <div class="mb-2">
+                                                        <div class="text-xs text-gray-500">Location</div>
+                                                        <div class="font-medium text-gray-700">Parker Pharmacy</div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="text-xs text-gray-500">Status</div>
+                                                        <div class="font-medium text-gray-700">Available for Sale</div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div>
+                                                    <div class="mb-2">
+                                                        <div class="text-xs text-gray-500">Temperature</div>
+                                                        <div class="font-medium text-gray-700">20°C</div>
+                                                    </div>
+                                                    <div class="mb-2">
+                                                        <div class="text-xs text-gray-500">Humidity</div>
+                                                        <div class="font-medium text-gray-700">50%</div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="text-xs text-gray-500">Custodian</div>
+                                                        <div class="font-medium text-gray-700">Peter Parker</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="mt-3 text-sm text-gray-600 bg-white p-3 rounded-lg">
+                                                <strong>Notes:</strong> Successfully delivered to pharmacy. Package intact and verified. Now available for retail.
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Supply Chain Journey -->
-            <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
-                <h3 class="text-xl font-bold text-gray-800 mb-6">Supply Chain Journey</h3>
-                <div class="space-y-6">
-                    <div class="timeline-item">
-                        <div class="bg-blue-50 p-4 rounded-lg">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h4 class="font-semibold text-blue-800">Manufacturing Completed</h4>
-                                    <p class="text-blue-600 text-sm">PharmaCorp Ltd - Mumbai Facility</p>
-                                    <p class="text-gray-600 text-sm mt-1">Batch PCM-500-001 manufactured and quality tested</p>
+                <!-- Contact Information -->
+                <div class="border-t border-gray-100">
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                                <div class="flex items-center mb-4">
+                                    <i class="fas fa-industry text-blue-500 text-xl mr-3"></i>
+                                    <h3 class="text-lg font-semibold text-gray-800">Manufacturer</h3>
                                 </div>
-                                <span class="text-blue-600 text-sm font-medium">Sep 1, 2024</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="timeline-item">
-                        <div class="bg-yellow-50 p-4 rounded-lg">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h4 class="font-semibold text-yellow-800">Distributed to Supplier</h4>
-                                    <p class="text-yellow-600 text-sm">MedSupply Co. - Regional Hub</p>
-                                    <p class="text-gray-600 text-sm mt-1">Temperature controlled transport maintained at 2-8°C</p>
+                                <div class="space-y-2">
+                                    <p class="flex justify-between">
+                                        <span class="text-gray-600">Name:</span>
+                                        <span class="font-medium text-gray-800">John Wick</span>
+                                    </p>
+                                    <p class="flex justify-between">
+                                        <span class="text-gray-600">Email:</span>
+                                        <span class="font-medium text-gray-800">john@wickmfg.com</span>
+                                    </p>
                                 </div>
-                                <span class="text-yellow-600 text-sm font-medium">Sep 5, 2024</span>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="timeline-item">
-                        <div class="bg-purple-50 p-4 rounded-lg">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h4 class="font-semibold text-purple-800">Shipped to Pharmacy</h4>
-                                    <p class="text-purple-600 text-sm">HealthPlus Pharmacy - Downtown</p>
-                                    <p class="text-gray-600 text-sm mt-1">Express delivery via FedEx, tracking: 1234567890</p>
+                            
+                            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                                <div class="flex items-center mb-4">
+                                    <i class="fas fa-truck text-green-500 text-xl mr-3"></i>
+                                    <h3 class="text-lg font-semibold text-gray-800">Distributor</h3>
                                 </div>
-                                <span class="text-purple-600 text-sm font-medium">Sep 8, 2024</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="timeline-item">
-                        <div class="bg-green-50 p-4 rounded-lg">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h4 class="font-semibold text-green-800">Available for Purchase</h4>
-                                    <p class="text-green-600 text-sm">HealthPlus Pharmacy - Downtown</p>
-                                    <p class="text-gray-600 text-sm mt-1">Product verified and available for consumer purchase</p>
+                                <div class="space-y-2">
+                                    <p class="flex justify-between">
+                                        <span class="text-gray-600">Name:</span>
+                                        <span class="font-medium text-gray-800">Jack Sparrow</span>
+                                    </p>
+                                    <p class="flex justify-between">
+                                        <span class="text-gray-600">Email:</span>
+                                        <span class="font-medium text-gray-800">jack@sparrowdist.com</span>
+                                    </p>
                                 </div>
-                                <span class="text-green-600 text-sm font-medium">Sep 10, 2024</span>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Blockchain Verification -->
-            <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
-                <h3 class="text-xl font-bold text-gray-800 mb-6">Blockchain Verification</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <h4 class="font-semibold text-gray-700 mb-3">Immutable Record</h4>
-                        <div class="bg-gray-50 p-4 rounded-lg font-mono text-sm">
-                            <div class="mb-2"><span class="text-gray-600">Block Hash:</span></div>
-                            <div class="text-xs break-all text-blue-600">0x7f9c8e6d4b2a1e8f3c5d9a2b7e4f1c8d6a9b3e7f2c5d8a1b4e7f9c2d5a8b1e4f</div>
-                            <div class="mt-3 mb-2"><span class="text-gray-600">Transaction ID:</span></div>
-                            <div class="text-xs break-all text-green-600">0xa1b2c3d4e5f6789012345678901234567890abcdef</div>
-                            <div class="mt-3"><span class="text-gray-600">Verified:</span> <span class="text-green-600">✓ Valid</span></div>
-                        </div>
-                    </div>
-                    <div>
-                        <h4 class="font-semibold text-gray-700 mb-3">Integrity Checks</h4>
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between">
-                                <span class="text-sm">Product Hash Match</span>
-                                <span class="text-green-600"><i class="fas fa-check-circle"></i></span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="text-sm">Supply Chain Integrity</span>
-                                <span class="text-green-600"><i class="fas fa-check-circle"></i></span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="text-sm">Temperature Log Verified</span>
-                                <span class="text-green-600"><i class="fas fa-check-circle"></i></span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="text-sm">Expiry Date Valid</span>
-                                <span class="text-green-600"><i class="fas fa-check-circle"></i></span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="text-sm">No Recalls Found</span>
-                                <span class="text-green-600"><i class="fas fa-check-circle"></i></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Safety Information -->
-            <div class="bg-blue-50 rounded-xl p-6">
-                <h3 class="text-xl font-bold text-blue-800 mb-4">
-                    <i class="fas fa-info-circle mr-2"></i>Safety Information
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-                    <div>
-                        <h4 class="font-semibold text-blue-700 mb-2">Dosage Instructions</h4>
-                        <ul class="space-y-1 text-blue-600">
-                            <li>• Adults: 1-2 tablets every 4-6 hours</li>
-                            <li>• Maximum 8 tablets in 24 hours</li>
-                            <li>• Take with or after food</li>
-                            <li>• Do not exceed recommended dose</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 class="font-semibold text-blue-700 mb-2">Storage Conditions</h4>
-                        <ul class="space-y-1 text-blue-600">
-                            <li>• Store at room temperature (15-30°C)</li>
-                            <li>• Keep in original packaging</li>
-                            <li>• Protect from moisture and light</li>
-                            <li>• Keep out of reach of children</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+                            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                                <div class="flex items-center mb-4">
+                                    <i class="fas fa-store text-purple-500 text-xl mr-3"></i>
+                                    <h3 class="text-lg font-semibold text-gray-800">Pharmacy</h3>
+                                </div>
+                                <div class="space-y-2">
+                                    <p class="flex justify-.
         </div>
 
         <!-- Sample QR Codes for Testing -->
@@ -354,6 +684,38 @@
                 setTimeout(() => simulateQRScan(batchId), 1000);
             }
         };
+        
+        // Google Translate initialization
+        function googleTranslateElementInit() {
+            if (document.getElementById('google_translate_element_consumer')) {
+                new google.translate.TranslateElement({
+                    pageLanguage: 'en',
+                    includedLanguages: 'ml,pa,bn,en,hi,gu,ta,te,or,mr,kok,ks,kn,ne,mni,as,ni,ao',
+                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                    autoDisplay: false
+                }, 'google_translate_element_consumer');
+            }
+        }
+        
+        // Load Google Translate script
+        (function() {
+            // Check if script is already loaded
+            if (!document.querySelector('script[src*="translate.google.com"]')) {
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+                script.async = true;
+                script.onerror = function() {
+                    console.error('Failed to load Google Translate script');
+                };
+                document.getElementsByTagName('head')[0].appendChild(script);
+            } else {
+                // Script already loaded, just initialize
+                if (typeof google !== 'undefined' && google.translate) {
+                    googleTranslateElementInit();
+                }
+            }
+        })();
     </script>
 </body>
 </html>
